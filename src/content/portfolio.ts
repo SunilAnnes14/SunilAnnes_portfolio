@@ -30,7 +30,7 @@ export const skills: { group: string; items: string[] }[] = [
   { group: "Languages", items: ["TypeScript", "JavaScript", "Python", "Java", "C", "SQL", "HTML & CSS"] },
   { group: "Frontend", items: ["Angular", "React", "Next.js", "Tailwind CSS", "RxJS", "Sass", "Three.js"] },
   { group: "Backend & data", items: ["Node.js", "Express", "Flask", "Spring Boot", "MongoDB", "PostgreSQL", "MySQL", "Firebase"] },
-  { group: "AI & ML", items: ["Scikit-learn", "Pandas", "Jupyter", "Matplotlib", "NLP"] },
+  { group: "AI & ML", items: ["Scikit-learn", "Pandas", "Jupyter", "Matplotlib"] },
   { group: "Web3", items: ["Solidity", "Hardhat", "Ethers.js"] },
   { group: "Tools", items: ["Git", "Docker", "Linux", "Vercel", "AWS", "Postman", "Figma"] },
 ];
@@ -52,8 +52,8 @@ export const projects: Project[] = [
     title: "CareerGapAI",
     tag: "AI · In progress",
     blurb:
-      "A career gap analyzer and upskilling engine. It finds the skills you're missing for a target role, maps how they depend on each other, pulls live market evidence through SerpAPI, and builds a prioritized learning roadmap.",
-    stack: ["Python", "FastAPI", "NLP", "SerpAPI"],
+      "Tells you which skills stand between you and a target job. It analyzes up to 30 live Google Jobs postings, measures how often each skill is asked for, scores your gaps by demand and by how many skills they unlock, and orders them into a prerequisite-aware learning roadmap.",
+    stack: ["Python", "FastAPI", "SerpAPI", "Pydantic"],
     repo: "https://github.com/SunilAnnes14/CareerGapAI",
   },
   {
@@ -68,8 +68,8 @@ export const projects: Project[] = [
     title: "Kolly Guess Game",
     tag: "Game",
     blurb:
-      "A Kollywood cinema guessing game with 3D visuals in Three.js, a Convex backend with authentication, and Framer Motion transitions.",
-    stack: ["React 19", "TypeScript", "Three.js", "Convex", "Tailwind v4"],
+      "The classic KOLLYWOOD paper game as a real-time multiplayer web app. Players take turns hiding a film's hero, heroine, movie and song; everyone races to guess them with nine chances. Answers are validated server-side so nobody can cheat.",
+    stack: ["React 19", "TypeScript", "Convex", "Tailwind v4", "Framer Motion"],
     href: "https://attividuuu.vercel.app/",
     repo: "https://github.com/SunilAnnes14/kolly-guess-game",
   },

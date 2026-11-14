@@ -162,7 +162,7 @@ export default function Home() {
         <section className="border-y border-stone-800/70 bg-[#0b0c0e]">
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
             <SectionHeading id="skills" eyebrow="Skills" title="What I work with" />
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
               {skills.map((g) => (
                 <div key={g.group}>
                   <p className="text-xs uppercase tracking-[0.25em] text-stone-500">{g.group}</p>
@@ -181,7 +181,7 @@ export default function Home() {
 
         {/* experience */}
         <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-          <SectionHeading id="experience" eyebrow="Education" title="Where I'm learning" />
+          <SectionHeading id="experience" eyebrow="Timeline" title="Education & journey" />
           <ol className="space-y-8 border-l border-stone-800 pl-6">
             {experience.map((j) => (
               <li key={j.company + j.period} className="relative">

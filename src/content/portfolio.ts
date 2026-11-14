@@ -30,7 +30,7 @@ export const skills: { group: string; items: string[] }[] = [
   { group: "Languages", items: ["TypeScript", "JavaScript", "Python", "Java", "C", "SQL", "HTML & CSS"] },
   { group: "Frontend", items: ["Angular", "React", "Next.js", "Tailwind CSS", "RxJS", "Sass", "Three.js"] },
   { group: "Backend & data", items: ["Node.js", "Express", "Flask", "Spring Boot", "MongoDB", "PostgreSQL", "MySQL", "Firebase"] },
-  { group: "AI & ML", items: ["Scikit-learn", "Pandas", "Jupyter", "Matplotlib"] },
+  { group: "AI & ML", items: ["PyTorch", "Scikit-learn", "Pandas", "Jupyter", "Matplotlib", "librosa"] },
   { group: "Web3", items: ["Solidity", "Hardhat", "Ethers.js"] },
   { group: "Tools", items: ["Git", "Docker", "Linux", "Vercel", "AWS", "Postman", "Figma"] },
 ];
@@ -55,6 +55,14 @@ export const projects: Project[] = [
       "Tells you which skills stand between you and a target job. It analyzes up to 30 live Google Jobs postings, measures how often each skill is asked for, scores your gaps by demand and by how many skills they unlock, and orders them into a prerequisite-aware learning roadmap.",
     stack: ["Python", "FastAPI", "SerpAPI", "Pydantic"],
     repo: "https://github.com/SunilAnnes14/CareerGapAI",
+  },
+  {
+    title: "Voice Cloner",
+    tag: "Deep learning",
+    blurb:
+      "Neural text-to-speech with zero-shot voice cloning: give it 6–30 seconds of someone speaking and it reads any text aloud in that voice, in 17 languages. Built on Coqui XTTS-v2 with an audio preprocessing pipeline, cached speaker embeddings, a FastAPI service and a browser recorder, plus a consent check and an AI-generated label on every output.",
+    stack: ["Python", "PyTorch", "Coqui XTTS-v2", "FastAPI", "librosa"],
+    repo: "https://github.com/SunilAnnes14/voice-cloner",
   },
   {
     title: "CineVault",
@@ -89,6 +97,7 @@ export const experience: Job[] = [
     period: "2022 – 2026 · 3rd year",
     points: [
       "Coursework in linear algebra, neural networks, statistical modeling, big data systems and algorithm optimization.",
+      "Neural Networks and Deep Learning mini project: Voice Cloner, zero-shot voice cloning with Coqui XTTS-v2.",
     ],
   },
   {

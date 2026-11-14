@@ -134,7 +134,7 @@ export default function Home() {
         {/* work */}
         <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeading id="work" eyebrow="Work" title="Project highlights" />
-          <ul className="grid gap-5 md:grid-cols-3">
+          <ul className="grid gap-5 md:grid-cols-2">
             {projects.map((p) => (
               <li key={p.title} className="group flex flex-col rounded-lg border border-stone-800 bg-[#0d0e10] p-5 transition hover:border-amber-300/40">
                 {p.tag && <span className="mb-3 w-fit rounded bg-amber-300/10 px-2 py-0.5 text-[10px] uppercase tracking-widest text-amber-200">{p.tag}</span>}

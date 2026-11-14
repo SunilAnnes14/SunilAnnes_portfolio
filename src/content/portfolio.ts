@@ -1,17 +1,20 @@
 /**
- * Everything personal lives here. Replace the placeholders with your own details;
- * the homepage, the game and its dossier all read from this file.
+ * Everything personal lives here. The homepage, the game and its dossier all read from this file.
  */
 
 export const profile = {
-  name: "Your Name",
-  initials: "YN",
+  name: "Sunil Annes S K",
+  initials: "SK",
   role: "Full-Stack Developer",
-  location: "City, Country",
-  availability: "Open to full-time roles",
-  headline: "I build web products that feel good to use, and the systems that keep them fast.",
+  /** Rotated through under the name on the homepage. */
+  roles: ["Full-Stack Developer", "Angular + TypeScript Builder", "AI & Data Science Student", "Always Shipping Something New"],
+  education: "B.Tech Artificial Intelligence and Data Science · LICET · Class of 2026",
+  location: "Chennai, India",
+  availability: "Open to internships & research",
+  headline: "Full-stack developer and AI & Data Science student. First, solve the problem. Then, write the code.",
   summary:
-    "I build fast, playful, well-tested web products. I like turning complicated systems into interfaces people actually enjoy using, and I care about the details: performance, accessibility and the feel of an interaction.",
+    "I'm a third-year B.Tech Artificial Intelligence and Data Science student at Loyola-ICAM College of Engineering and Technology (LICET) in Chennai. I focus on web development, Angular and full-stack systems, with a growing interest in AI and machine learning. Right now I'm building CareerGapAI and a retro CRT web architecture, and learning Node.js, Docker, system design and cloud systems. Most days I'm probably debugging with coffee.",
+  // TODO: add your real email and profile links.
   email: "you@example.com",
   links: [
     { label: "GitHub", href: "https://github.com/your-handle" },
@@ -21,10 +24,10 @@ export const profile = {
 };
 
 export const skills: { group: string; items: string[] }[] = [
-  { group: "Languages", items: ["TypeScript", "JavaScript", "Python", "SQL"] },
-  { group: "Frontend", items: ["React", "Next.js", "Tailwind CSS", "Motion", "Three.js"] },
-  { group: "Backend", items: ["Node.js", "PostgreSQL", "REST & GraphQL", "Redis"] },
-  { group: "Practice", items: ["Testing", "CI/CD", "Accessibility", "Performance"] },
+  { group: "Frontend", items: ["Angular", "TypeScript", "Web Development"] },
+  { group: "Full-stack", items: ["Full-Stack Systems", "Node.js"] },
+  { group: "AI & Data", items: ["Artificial Intelligence", "Machine Learning", "Data Science"] },
+  { group: "Learning now", items: ["Node.js", "Docker", "System Design", "Cloud Systems"] },
 ];
 
 export interface Project {
@@ -45,19 +48,20 @@ export const projects: Project[] = [
       "A turn-based game of risk and deduction played against a hostile recruiter, rendered in real-time 3D. Built around a pure, unit-tested TypeScript rules engine and a probability-driven AI.",
     stack: ["Next.js", "React Three Fiber", "TypeScript", "Zustand", "Vitest"],
     href: "/interview",
-    repo: "https://github.com/your-handle/chamber",
   },
   {
-    title: "Project Two",
-    blurb: "One or two sentences on the problem, what you built and the result. Numbers help.",
-    stack: ["React", "Node.js", "PostgreSQL"],
-    href: "#",
+    title: "CareerGapAI",
+    tag: "In progress",
+    // TODO: one or two sentences on what it does and who it's for.
+    blurb: "An AI project I'm building right now. Details coming soon.",
+    stack: ["AI & ML"],
   },
   {
-    title: "Project Three",
-    blurb: "Another project worth showing. Link the live demo and the repo if you can.",
-    stack: ["Python", "FastAPI"],
-    href: "#",
+    title: "Retro CRT Web Architecture",
+    tag: "In progress",
+    // TODO: describe what it is and link a demo.
+    blurb: "A retro, CRT-inspired web architecture I'm currently building.",
+    stack: ["Web"],
   },
 ];
 
@@ -70,27 +74,24 @@ export interface Job {
 
 export const experience: Job[] = [
   {
-    company: "Company Name",
-    role: "Software Engineer",
-    period: "2024 - Present",
-    points: ["Shipped something that mattered.", "Improved something measurable by N%."],
-  },
-  {
-    company: "Previous Company",
-    role: "Intern",
-    period: "2023",
-    points: ["Built and owned a feature end to end."],
+    company: "Loyola-ICAM College of Engineering and Technology (LICET), Chennai",
+    role: "B.Tech, Artificial Intelligence and Data Science",
+    period: "3rd year · Class of 2026",
+    points: [
+      "Focus: web development, Angular, full-stack systems, AI and machine learning.",
+      "Currently learning Node.js, Docker, system design and cloud systems.",
+    ],
   },
 ];
 
 /** Shown when a blank is fired. Keep them short. */
 export const funFacts = [
-  "I once fixed a bug by deleting 400 lines of code.",
-  "Tabs or spaces? Whatever the formatter says.",
-  "Favourite keyboard shortcut: Ctrl+Shift+P.",
-  "I test in production. Kidding. Mostly.",
-  "My rubber duck has a name.",
-  "I read changelogs for fun.",
+  "First, solve the problem. Then, write the code. (John Johnson)",
+  "Probably debugging with coffee right now.",
+  "Currently learning Docker. The containers are winning.",
+  "Callsign: sunil@sk-linux.",
+  "Running SK-Linux 1.0 LTS on sk-kernel-5.15-ai-rt.",
+  "Always shipping something new.",
 ];
 
 /** Dossier sections and the round you need to clear to unlock each one. */
@@ -98,7 +99,7 @@ export const SECTIONS = [
   { id: "about", label: "About", unlockAt: 1 },
   { id: "skills", label: "Skills", unlockAt: 1 },
   { id: "projects", label: "Projects", unlockAt: 2 },
-  { id: "experience", label: "Experience", unlockAt: 3 },
+  { id: "experience", label: "Education", unlockAt: 3 },
   { id: "contact", label: "Contact", unlockAt: 3 },
 ] as const;
 

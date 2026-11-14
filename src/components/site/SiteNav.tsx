@@ -4,7 +4,7 @@ import { profile } from "@/content/portfolio";
 const LINKS = [
   { href: "#work", label: "Work" },
   { href: "#skills", label: "Skills" },
-  { href: "#experience", label: "Experience" },
+  { href: "#experience", label: "Education" },
   { href: "#contact", label: "Contact" },
 ];
 

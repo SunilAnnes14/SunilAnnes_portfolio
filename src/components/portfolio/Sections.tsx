@@ -77,7 +77,7 @@ export function Projects() {
 export function Experience() {
   return (
     <section>
-      <H>Experience</H>
+      <H>Education</H>
       <ol className="space-y-4 border-l border-stone-700 pl-4">
         {experience.map((j) => (
           <li key={j.company + j.period}>

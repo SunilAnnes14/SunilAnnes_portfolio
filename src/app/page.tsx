@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { experience, profile, projects, skills } from "@/content/portfolio";
 import { HeroVisual } from "@/components/site/HeroVisual";
+import { RoleTicker } from "@/components/site/RoleTicker";
 import { SiteNav } from "@/components/site/SiteNav";
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
@@ -49,7 +50,10 @@ export default function Home() {
               </p>
               <h1 className="mt-5 font-display text-5xl leading-[1.05] text-stone-50 sm:text-6xl">{profile.name}</h1>
               <p className="mt-2 text-lg text-amber-200/90">
-                {profile.role} · {profile.location}
+                <RoleTicker roles={profile.roles} />
+              </p>
+              <p className="mt-1 text-sm text-stone-400">
+                {profile.education} · {profile.location}
               </p>
               <p className="mt-6 max-w-xl text-base leading-relaxed text-stone-300">{profile.headline}</p>
               <div className="mt-8 flex flex-wrap gap-3">
@@ -177,7 +181,7 @@ export default function Home() {
 
         {/* experience */}
         <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-          <SectionHeading id="experience" eyebrow="Experience" title="Where I've worked" />
+          <SectionHeading id="experience" eyebrow="Education" title="Where I'm learning" />
           <ol className="space-y-8 border-l border-stone-800 pl-6">
             {experience.map((j) => (
               <li key={j.company + j.period} className="relative">
@@ -202,7 +206,8 @@ export default function Home() {
             <Eyebrow>Contact</Eyebrow>
             <h2 className="mt-3 font-display text-4xl text-stone-100 sm:text-5xl">Let&apos;s talk.</h2>
             <p className="mx-auto mt-4 max-w-xl text-stone-400">
-              Hiring, collaborating, or just want to argue about the Recruiter&apos;s AI? My inbox is open.
+              Offering an internship, a research collaboration, or just want to argue about the Recruiter&apos;s AI? My
+              inbox is open.
             </p>
             <a
               href={`mailto:${profile.email}`}

@@ -21,9 +21,17 @@ const vt = VT323({
   weight: "400",
 });
 
+/** Absolute base for share-image URLs: set NEXT_PUBLIC_SITE_URL, or let Vercel provide its production URL. */
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: `${profile.name} · ${profile.role}`,
   description: `${profile.headline} Portfolio of ${profile.name}, featuring The Interview: a portfolio you have to survive.`,
+  openGraph: { type: "website", siteName: profile.name },
+  twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = {

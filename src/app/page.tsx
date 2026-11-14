@@ -133,7 +133,7 @@ export default function Home() {
 
         {/* work */}
         <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-          <SectionHeading id="work" eyebrow="Work" title="Selected projects" />
+          <SectionHeading id="work" eyebrow="Work" title="Project highlights" />
           <ul className="grid gap-5 md:grid-cols-3">
             {projects.map((p) => (
               <li key={p.title} className="group flex flex-col rounded-lg border border-stone-800 bg-[#0d0e10] p-5 transition hover:border-amber-300/40">
@@ -156,6 +156,14 @@ export default function Home() {
               </li>
             ))}
           </ul>
+          <a
+            href={profile.moreProjectsUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-6 inline-block text-sm text-stone-400 underline-offset-4 hover:text-stone-100 hover:underline"
+          >
+            More projects on GitHub →
+          </a>
         </section>
 
         {/* skills */}

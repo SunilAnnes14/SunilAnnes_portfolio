@@ -18,9 +18,11 @@ export const profile = {
   email: "annessunil14@gmail.com",
   links: [
     { label: "GitHub", href: "https://github.com/SunilAnnes14" },
-    { label: "Previous portfolio", href: "https://sunilannesskportfolio.vercel.app/" },
-    // TODO: add LinkedIn (and Kaggle) once you have the exact profile URLs.
+    { label: "Kaggle", href: "https://www.kaggle.com/sunilannessk" },
+    // TODO: add LinkedIn once you have the exact profile URL.
   ],
+  /** Shown under the projects grid. */
+  moreProjectsUrl: "https://github.com/SunilAnnes14?tab=repositories",
   resumeUrl: "#",
 };
 
@@ -44,14 +46,8 @@ export interface Project {
 }
 
 export const projects: Project[] = [
-  {
-    title: "The Interview",
-    tag: "This site",
-    blurb:
-      "A turn-based game of risk and deduction played against a hostile recruiter, rendered in real-time 3D. Built around a pure, unit-tested TypeScript rules engine and a probability-driven AI.",
-    stack: ["Next.js", "React Three Fiber", "TypeScript", "Zustand", "Vitest"],
-    href: "/interview",
-  },
+  // Only the strongest work goes here; The Interview has its own featured section on the homepage,
+  // and everything else is one click away via profile.moreProjectsUrl.
   {
     title: "CareerGapAI",
     tag: "AI · In progress",
@@ -76,31 +72,6 @@ export const projects: Project[] = [
     stack: ["React 19", "TypeScript", "Three.js", "Convex", "Tailwind v4"],
     href: "https://attividuuu.vercel.app/",
     repo: "https://github.com/SunilAnnes14/kolly-guess-game",
-  },
-  {
-    title: "Loan Approval ML",
-    tag: "Machine learning",
-    blurb:
-      "A loan approval classifier: exploratory data analysis, feature engineering and supervised classification on financial loan data to predict applicant creditworthiness.",
-    stack: ["Python", "Scikit-learn", "Pandas", "Matplotlib", "Jupyter"],
-    repo: "https://github.com/SunilAnnes14/loan_project_ML",
-  },
-  {
-    title: "Hello Blockchain",
-    tag: "Web3",
-    blurb:
-      "My first Web3 dApp: a Solidity smart contract on a local Hardhat chain that stores and updates a message, with a frontend that reads and writes it through Ethers.js.",
-    stack: ["Solidity", "Hardhat", "Ethers.js", "TypeScript"],
-    repo: "https://github.com/SunilAnnes14/hello-blockchain",
-  },
-  {
-    title: "Inside the Machine",
-    tag: "Portfolio v1",
-    blurb:
-      "My previous portfolio: a retro amber CRT computer running \"SK-Linux\", with BIOS boot text, CRT page transitions, a hidden command line and 3D project cartridges.",
-    stack: ["JavaScript", "GSAP", "Three.js", "HTML & CSS"],
-    href: "https://sunilannesskportfolio.vercel.app/",
-    repo: "https://github.com/SunilAnnes14/sunilannes_SK_portfolio",
   },
 ];
 

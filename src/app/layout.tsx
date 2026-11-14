@@ -22,8 +22,8 @@ const vt = VT323({
 });
 
 export const metadata: Metadata = {
-  title: `The Interview · ${profile.name}`,
-  description: `${profile.role}. A portfolio you have to survive: a turn-based game of nerve against a hostile recruiter.`,
+  title: `${profile.name} · ${profile.role}`,
+  description: `${profile.headline} Portfolio of ${profile.name}, featuring The Interview: a portfolio you have to survive.`,
 };
 
 export const viewport: Viewport = {

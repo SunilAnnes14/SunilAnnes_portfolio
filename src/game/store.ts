@@ -53,7 +53,52 @@ interface GameStore {
   scheduleNext: () => (() => void) | undefined;
   toggleMute: () => void;
   setDossier: (open: boolean) => void;
+  /** Index of the open tutorial step, or null when the tour is closed. */
+  tutorial: number | null;
+  setTutorial: (step: number | null) => void;
+  /** Close the tour and remember it was seen. */
+  finishTutorial: () => void;
+  renderMode: RenderMode;
+  /** False until the client has picked a view (saved choice, else 3D when WebGL works). */
+  viewReady: boolean;
+  initRenderMode: () => void;
+  setRenderMode: (mode: RenderMode) => void;
 }
+
+export function webglAvailable() {
+  try {
+    const c = document.createElement("canvas");
+    return Boolean(c.getContext("webgl2") ?? c.getContext("webgl"));
+  } catch {
+    return false;
+  }
+}
+
+export type RenderMode = "3d" | "2d";
+
+const TUTORIAL_KEY = "interview:tutorial-done";
+const MODE_KEY = "interview:render-mode";
+
+/** Storage can throw (private mode, blocked site data), so every access is guarded. */
+export function readPref(key: string): string | null {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+function writePref(key: string, value: string) {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    /* ignore */
+  }
+}
+export const tutorialSeen = () => readPref(TUTORIAL_KEY) === "1";
+export const savedRenderMode = (): RenderMode | null => {
+  const v = readPref(MODE_KEY);
+  return v === "2d" || v === "3d" ? v : null;
+};
 
 let busyTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -62,6 +107,23 @@ export const useGame = create<GameStore>((set, get) => ({
   busy: false,
   muted: false,
   dossierOpen: false,
+  tutorial: null,
+  renderMode: "3d",
+  viewReady: false,
+
+  initRenderMode: () => {
+    if (get().viewReady) return;
+    set({ renderMode: savedRenderMode() ?? (webglAvailable() ? "3d" : "2d"), viewReady: true });
+  },
+  setTutorial: (step) => set({ tutorial: step }),
+  finishTutorial: () => {
+    writePref(TUTORIAL_KEY, "1");
+    set({ tutorial: null });
+  },
+  setRenderMode: (mode) => {
+    writePref(MODE_KEY, mode);
+    set({ renderMode: mode });
+  },
 
   dispatch: (action) => {
     const { game, muted } = get();
@@ -78,8 +140,9 @@ export const useGame = create<GameStore>((set, get) => ({
   },
 
   scheduleNext: () => {
-    const { game, busy, dispatch } = get();
-    if (busy) return;
+    const { game, busy, dispatch, tutorial } = get();
+    // The game waits while the tutorial is open.
+    if (busy || tutorial !== null) return;
     let delay: number;
     let action: () => Action;
     if (game.phase === "loading") {

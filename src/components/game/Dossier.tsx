@@ -67,7 +67,7 @@ export function Dossier() {
             </div>
             <footer className="border-t border-stone-800 px-6 py-3 text-xs text-stone-500">
               {lost ? "Didn't make it? " : "In a hurry? "}
-              <Link href="/resume" className="text-amber-200 underline underline-offset-4">Read the unredacted version</Link>
+              <Link href="/" className="text-amber-200 underline underline-offset-4">Read the full portfolio</Link>
             </footer>
           </motion.aside>
         </motion.div>

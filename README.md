@@ -2,7 +2,16 @@
 
 A portfolio you have to survive. You sit across a desk from the Recruiter, a figure in a suit with a CRT monitor for a head. Between you is a shotgun loaded with a known number of live and blank shells in an unknown order. Clearing each of the three rounds unlocks more of the dossier: About, Skills, Projects, Experience and Contact.
 
-Visitors who'd rather not play can go straight to `/resume`, which has the same content as plain HTML.
+| Route | What it is |
+|---|---|
+| `/` | The portfolio: hero with a live 3D view of the Recruiter's office, about, featured project, work, skills, experience and contact. |
+| `/interview` | The game, in real-time 3D (React Three Fiber) with a lightweight 2D view as a toggle and automatic fallback. A 7-step tutorial opens on the first turn and can be skipped or replayed from "How to play". |
+
+`/resume` redirects to `/`.
+
+### 3D assets
+
+All models are procedural (three.js primitives, extrusions and canvas textures), so there are no model or texture files to download. They live in `src/components/three/assets/`: `Room`, `Desk`, `Recruiter` (its CRT screen renders live faces), `Shotgun`, `ShellModel` and `ItemModel`. Coordinates follow one contract: the desk top is at y=0, the player sits at +z and the Recruiter at -z.
 
 ## Run it
 
@@ -47,6 +56,7 @@ All personal content is in [`src/content/portfolio.ts`](src/content/portfolio.ts
 
 ## Roadmap
 
-- [x] 2.5D version: engine, AI, scene, dossier, `/resume`
-- [ ] 3D version: React Three Fiber scene driven by the same engine and store
+- [x] 2.5D version: engine, AI, scene, dossier
+- [x] 3D version: React Three Fiber scene driven by the same engine and store
+- [x] Portfolio homepage, tutorial, friendlier HUD
 - [ ] Real content, OG image, deploy

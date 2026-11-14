@@ -50,8 +50,12 @@ export function Projects() {
               <p className="font-bold text-stone-100">{p.title}</p>
               <div className="flex gap-3 text-xs">
                 {p.href && (
-                  <a className="text-amber-200 underline underline-offset-4" href={p.href} target="_blank" rel="noreferrer">
-                    Live
+                  <a
+                    className="text-amber-200 underline underline-offset-4"
+                    href={p.href}
+                    {...(p.href.startsWith("/") ? {} : { target: "_blank", rel: "noreferrer" })}
+                  >
+                    {p.href.startsWith("/") ? "You're in it" : "Live"}
                   </a>
                 )}
                 {p.repo && (

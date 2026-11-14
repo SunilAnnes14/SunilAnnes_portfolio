@@ -47,12 +47,21 @@ function Intro() {
       <h1 className="mt-2 font-display text-4xl tracking-[0.15em] text-stone-100 sm:text-5xl">THE INTERVIEW</h1>
       <p className="mt-2 text-sm italic text-stone-400">A portfolio you have to survive.</p>
 
-      <ul className="mt-6 space-y-2 text-sm leading-relaxed text-stone-300">
-        <li><span className="text-amber-300">›</span> A shotgun is loaded with a known number of <span className="text-red-400">live</span> and <span className="text-sky-300">blank</span> shells, in an unknown order.</li>
-        <li><span className="text-amber-300">›</span> On your turn, shoot the Recruiter or yourself. A blank at yourself keeps your turn.</li>
-        <li><span className="text-amber-300">›</span> Use items first to tilt the odds. Hover an item to see what it does.</li>
-        <li><span className="text-amber-300">›</span> Clear all three rounds to unlock the full dossier.</li>
-      </ul>
+      <ol className="mt-6 grid gap-3 text-sm leading-relaxed text-stone-300 sm:grid-cols-3">
+        <li className="rounded border border-stone-800 bg-black/30 p-3">
+          <span className="block font-display text-lg text-amber-200">1 · Read</span>
+          You&apos;re told how many <span className="text-red-400">live</span> and <span className="text-sky-300">blank</span> shells are loaded.
+        </li>
+        <li className="rounded border border-stone-800 bg-black/30 p-3">
+          <span className="block font-display text-lg text-amber-200">2 · Decide</span>
+          Shoot the Recruiter, or yourself. A blank at yourself means you go again.
+        </li>
+        <li className="rounded border border-stone-800 bg-black/30 p-3">
+          <span className="block font-display text-lg text-amber-200">3 · Unlock</span>
+          Each round you win reveals more of my portfolio.
+        </li>
+      </ol>
+      <p className="mt-4 text-xs text-stone-500">New here? A 30-second tutorial starts on your first turn. You can skip it.</p>
 
       <div className="mt-5 flex flex-wrap gap-2">
         {RULE_ITEMS.map((id) => (
@@ -65,7 +74,7 @@ function Intro() {
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <button autoFocus onClick={start} className={primary}>Begin interview</button>
-        <Link href="/resume" className={secondary}>Skip to portfolio</Link>
+        <Link href="/" className={secondary}>Back to portfolio</Link>
       </div>
       <p className="mt-4 text-[11px] text-stone-600">Sound on recommended · Keys: O shoot Recruiter, S shoot yourself, 1-6 items, D dossier</p>
     </Panel>
@@ -107,7 +116,7 @@ function GameOver() {
       </p>
       <div className="mt-7 flex flex-wrap gap-3">
         <button autoFocus onClick={() => dispatch({ type: "restart", seed: (Date.now() * 7) >>> 0 })} className={primary}>Reapply</button>
-        <Link href="/resume" className={secondary}>View portfolio</Link>
+        <Link href="/" className={secondary}>View portfolio</Link>
       </div>
     </Panel>
   );

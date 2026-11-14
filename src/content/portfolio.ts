@@ -1,12 +1,15 @@
 /**
  * Everything personal lives here. Replace the placeholders with your own details;
- * the game, dossier and /resume page all read from this file.
+ * the homepage, the game and its dossier all read from this file.
  */
 
 export const profile = {
   name: "Your Name",
+  initials: "YN",
   role: "Full-Stack Developer",
   location: "City, Country",
+  availability: "Open to full-time roles",
+  headline: "I build web products that feel good to use, and the systems that keep them fast.",
   summary:
     "I build fast, playful, well-tested web products. I like turning complicated systems into interfaces people actually enjoy using, and I care about the details: performance, accessibility and the feel of an interaction.",
   email: "you@example.com",
@@ -30,14 +33,18 @@ export interface Project {
   stack: string[];
   href?: string;
   repo?: string;
+  /** Short label shown on the card, e.g. "2025" or "Side project". */
+  tag?: string;
 }
 
 export const projects: Project[] = [
   {
     title: "The Interview",
+    tag: "This site",
     blurb:
-      "This site. A turn-based game of risk and deduction, played against a hostile recruiter, built around a pure, unit-tested TypeScript rules engine.",
-    stack: ["Next.js", "TypeScript", "Zustand", "Motion", "Vitest"],
+      "A turn-based game of risk and deduction played against a hostile recruiter, rendered in real-time 3D. Built around a pure, unit-tested TypeScript rules engine and a probability-driven AI.",
+    stack: ["Next.js", "React Three Fiber", "TypeScript", "Zustand", "Vitest"],
+    href: "/interview",
     repo: "https://github.com/your-handle/chamber",
   },
   {

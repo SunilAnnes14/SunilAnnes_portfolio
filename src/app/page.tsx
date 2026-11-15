@@ -18,7 +18,7 @@ function SectionHeading({ id, eyebrow, title }: { id: string; eyebrow: string; t
 }
 
 const FEATURE_FACTS = [
-  { k: "3 rounds", v: "each clear unlocks part of this portfolio" },
+  { k: "1 or 3 rounds", v: "Quick unlocks everything in one win; Full goes round by round" },
   { k: "7 items", v: "Debugger, Hotfix, Friday Deploy and friends" },
   { k: "~2 min", v: "a full run, with a 30-second tutorial" },
 ];

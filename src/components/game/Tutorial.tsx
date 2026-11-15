@@ -15,7 +15,7 @@ export const TUTORIAL_STEPS: Step[] = [
   {
     target: null,
     title: "Welcome to the interview",
-    body: "You and the Recruiter take turns with one shotgun. Outlast it for three rounds to unlock my portfolio. This tour takes about 30 seconds.",
+    body: "You and the Recruiter take turns with one shotgun. Outlast it to unlock my portfolio. This tour takes about 30 seconds.",
   },
   {
     target: "magazine",
@@ -45,7 +45,7 @@ export const TUTORIAL_STEPS: Step[] = [
   {
     target: "dossier",
     title: "Your reward",
-    body: "Each round you clear unlocks part of my portfolio in the Dossier. Short on time? The portfolio link up top is always there.",
+    body: "Winning unlocks my portfolio in the Dossier: all of it in a Quick interview, round by round in a Full one. Short on time? The portfolio link up top is always there.",
   },
 ];
 

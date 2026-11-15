@@ -47,10 +47,12 @@ export type ItemEvent = {
 export type GameEvent = LoadEvent | ShotEvent | ItemEvent;
 
 export type Difficulty = "easy" | "normal";
+/** Quick: one round unlocks the whole portfolio. Full: three rounds, each unlocking part of it. */
+export type GameLength = "quick" | "full";
 
 export type Action =
-  | { type: "start"; seed?: number; difficulty?: Difficulty }
-  | { type: "restart"; seed?: number; difficulty?: Difficulty }
+  | { type: "start"; seed?: number; difficulty?: Difficulty; length?: GameLength }
+  | { type: "restart"; seed?: number; difficulty?: Difficulty; length?: GameLength }
   | { type: "load" }
   | { type: "ready" }
   | { type: "shoot"; side: Side; target: Side }
@@ -72,6 +74,7 @@ export interface GameState {
   round: number;
   roundsWon: number;
   difficulty: Difficulty;
+  length: GameLength;
   hp: Record<Side, number>;
   maxHp: Record<Side, number>;
   /** Remaining shells; index 0 is the chambered one. */

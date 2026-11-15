@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { SECTIONS, profile } from "@/content/portfolio";
+import { profile } from "@/content/portfolio";
 import { DIFFICULTY } from "@/game/engine";
-import { ITEMS } from "@/game/items";
 import { useGame } from "@/game/store";
 import { unlockAudio } from "@/game/sound";
-import type { Difficulty, ItemId } from "@/game/types";
+import type { Difficulty, GameLength } from "@/game/types";
 import { AchievementList } from "./AchievementToasts";
-import { ItemIcon } from "./icons";
+import { justUnlocked } from "@/game/unlocks";
 
 function Panel({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   return (
@@ -35,39 +34,86 @@ const primary =
 const secondary =
   "rounded-md border border-stone-500/40 px-5 py-2.5 text-sm uppercase tracking-[0.2em] text-stone-300 transition hover:bg-white/5";
 
-const RULE_ITEMS: ItemId[] = ["debugger", "hotfix", "coffee", "mergeConflict", "refactor", "prodDeploy", "stackTrace"];
 
 const DIFFICULTY_BLURB: Record<Difficulty, string> = {
   easy: "+1 composure, 2 bonus items per reload, and a Recruiter who second-guesses itself.",
   normal: "An even fight. The Recruiter plays the odds and makes fewer mistakes.",
 };
 
-function DifficultyPicker() {
-  const difficulty = useGame((s) => s.difficulty);
-  const setDifficulty = useGame((s) => s.setDifficulty);
+const LENGTH_BLURB: Record<GameLength, string> = {
+  quick: "One round, about a minute. Win it and the whole portfolio unlocks.",
+  full: "Three rounds that get harder. Each win unlocks more of the portfolio.",
+};
+
+function Choice<T extends string>({
+  legend,
+  options,
+  value,
+  onChange,
+  label,
+  blurb,
+  recommended,
+}: {
+  legend: string;
+  options: readonly T[];
+  value: T;
+  onChange: (v: T) => void;
+  label: (v: T) => string;
+  blurb: (v: T) => string;
+  recommended: T;
+}) {
   return (
-    <fieldset className="mt-5">
-      <legend className="text-[10px] uppercase tracking-[0.3em] text-stone-500">Difficulty</legend>
-      <div className="mt-2 grid grid-cols-2 gap-2" role="radiogroup">
-        {(["easy", "normal"] as const).map((d) => (
+    <fieldset className="mt-4">
+      <legend className="text-[10px] uppercase tracking-[0.3em] text-stone-500">{legend}</legend>
+      <div className="mt-2 grid grid-cols-2 gap-2" role="radiogroup" aria-label={legend}>
+        {options.map((o) => (
           <button
-            key={d}
+            key={o}
             role="radio"
-            aria-checked={difficulty === d}
-            onClick={() => setDifficulty(d)}
+            aria-checked={value === o}
+            onClick={() => onChange(o)}
             className={`rounded-md border px-3 py-2 text-left transition ${
-              difficulty === d ? "border-amber-300/70 bg-amber-300/10" : "border-stone-700 hover:border-stone-500"
+              value === o ? "border-amber-300/70 bg-amber-300/10" : "border-stone-700 hover:border-stone-500"
             }`}
           >
             <span className="block text-sm font-bold uppercase tracking-[0.2em] text-stone-100">
-              {DIFFICULTY[d].label}
-              {d === "easy" && <span className="ml-2 text-[10px] font-normal tracking-widest text-emerald-300">recommended</span>}
+              {label(o)}
+              {o === recommended && <span className="ml-2 text-[10px] font-normal tracking-widest text-emerald-300">recommended</span>}
             </span>
-            <span className="mt-0.5 block text-[11px] leading-snug text-stone-400">{DIFFICULTY_BLURB[d]}</span>
+            <span className="mt-0.5 block text-[11px] leading-snug text-stone-400">{blurb(o)}</span>
           </button>
         ))}
       </div>
     </fieldset>
+  );
+}
+
+function ModePickers() {
+  const difficulty = useGame((s) => s.difficulty);
+  const setDifficulty = useGame((s) => s.setDifficulty);
+  const length = useGame((s) => s.length);
+  const setLength = useGame((s) => s.setLength);
+  return (
+    <>
+      <Choice
+        legend="Interview length"
+        options={["quick", "full"] as const}
+        value={length}
+        onChange={setLength}
+        label={(l) => (l === "quick" ? "Quick · 1 round" : "Full · 3 rounds")}
+        blurb={(l) => LENGTH_BLURB[l]}
+        recommended="quick"
+      />
+      <Choice
+        legend="Difficulty"
+        options={["easy", "normal"] as const}
+        value={difficulty}
+        onChange={setDifficulty}
+        label={(d) => DIFFICULTY[d].label}
+        blurb={(d) => DIFFICULTY_BLURB[d]}
+        recommended="easy"
+      />
+    </>
   );
 }
 
@@ -94,7 +140,7 @@ function Intro() {
         </li>
         <li className="rounded border border-stone-800 bg-black/30 p-3">
           <span className="block font-display text-lg text-amber-200">3 · Unlock</span>
-          Each round you win reveals more of my portfolio.
+          Win to reveal my portfolio, all at once or round by round.
         </li>
       </ol>
       <p className="mt-4 text-xs text-stone-500">
@@ -102,16 +148,7 @@ function Intro() {
         <span className="text-emerald-300">pop quiz</span>: answer right for a free item.
       </p>
 
-      <DifficultyPicker />
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        {RULE_ITEMS.map((id) => (
-          <span key={id} title={ITEMS[id].effect} className="flex items-center gap-1.5 rounded border border-stone-700 px-2 py-1 text-[11px] text-stone-400">
-            <ItemIcon id={id} className="h-3.5 w-3.5 text-amber-200/80" />
-            {ITEMS[id].name}
-          </span>
-        ))}
-      </div>
+      <ModePickers />
 
       <div className="mt-7 flex flex-wrap items-center gap-3">
         <button autoFocus onClick={start} className={primary}>Begin interview</button>
@@ -126,7 +163,7 @@ function RoundOver() {
   const game = useGame((s) => s.game);
   const dispatch = useGame((s) => s.dispatch);
   const setDossier = useGame((s) => s.setDossier);
-  const fresh = SECTIONS.filter((x) => x.unlockAt === game.roundsWon);
+  const fresh = justUnlocked(game);
   return (
     <Panel delay={1.2}>
       <p className="text-[10px] uppercase tracking-[0.4em] text-amber-400">Round {game.round + 1} cleared</p>

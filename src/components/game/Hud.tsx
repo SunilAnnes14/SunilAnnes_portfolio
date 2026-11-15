@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { SECTIONS, funFacts } from "@/content/portfolio";
-import { ROUNDS } from "@/game/engine";
+import { roundsFor } from "@/game/engine";
+import { unlockedSections } from "@/game/unlocks";
 import { TIMING, useGame } from "@/game/store";
 import type { GameEvent } from "@/game/types";
 import { ShellGlyph } from "./icons";
@@ -151,7 +152,8 @@ export function Hud() {
   const setTutorial = useGame((s) => s.setTutorial);
   const renderMode = useGame((s) => s.renderMode);
   const setRenderMode = useGame((s) => s.setRenderMode);
-  const unlocked = SECTIONS.filter((x) => game.roundsWon >= x.unlockAt).length;
+  const unlocked = unlockedSections(game).length;
+  const rounds = roundsFor(game.length);
   const playing = game.phase !== "intro";
 
   return (
@@ -166,10 +168,10 @@ export function Hud() {
               <div>
                 <div className="font-display text-sm tracking-[0.3em] text-stone-200">
                   ROUND {game.round + 1}
-                  <span className="text-stone-500">/{ROUNDS.length}</span>
+                  <span className="text-stone-500">/{rounds.length}</span>
                 </div>
                 <div className="mt-1 flex gap-1.5">
-                  {ROUNDS.map((_, i) => (
+                  {rounds.map((_, i) => (
                     <span key={i} className={`h-1.5 w-6 rounded-full ${i < game.roundsWon ? "bg-amber-400" : i === game.round ? "bg-stone-300" : "bg-stone-700"}`} />
                   ))}
                 </div>

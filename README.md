@@ -59,6 +59,7 @@ The site is fully static, so any Next.js host works. On Vercel:
 
 ### Extras
 
+- **Interview length:** Quick (the default) is one round; winning it unlocks the whole portfolio. Full is three rounds that get harder, each unlocking more of the dossier. The unlock rules live in `src/game/unlocks.ts`.
 - **Difficulty:** Easy (the default) gives you +1 composure, 2 bonus items per reload, and a Recruiter that makes more mistakes. Normal is the even fight. The choice is saved in the browser.
 - **Pop quiz:** on every second reload the Recruiter asks a dev/AI interview question (`src/content/quiz.ts`). A correct answer earns a random item from the round's pool. The game pauses while the quiz is open.
 - **Speech bubbles:** the Recruiter reacts to shots, items and reloads (`src/content/recruiterLines.ts`). Click it to poke it.
@@ -73,5 +74,7 @@ The site is fully static, so any Next.js host works. On Vercel:
 | Easy | careful | ~97% | ~72% |
 | Easy | casual (35% hunches) | ~96% | ~68% |
 | Normal | careful | ~89% | ~42% |
+
+Quick interview (one round): Easy wins about 93% of games for casual players and 94% for careful ones; Normal about 69% for casual players.
 
 Tune `MISTAKE_RATES` (ai.ts), and `DIFFICULTY` and `ROUNDS` (engine.ts).

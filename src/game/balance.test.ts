@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { decide } from "./ai";
 import { createGame, reduce } from "./engine";
-import type { Action, Difficulty, GameState } from "./types";
+import type { Action, Difficulty, GameLength, GameState } from "./types";
 
 /**
  * Plays a full game. The player uses the same logic as the AI with a fixed gut-call rate:
  * 0 is a careful player, 0.35 is a casual one who often goes with a hunch.
  */
-function playOut(seed: number, difficulty: Difficulty, playerMistakes: number): GameState {
-  let s = reduce(createGame(seed, difficulty), { type: "start", seed });
+function playOut(seed: number, difficulty: Difficulty, playerMistakes: number, length: GameLength = "full"): GameState {
+  let s = reduce(createGame(seed, difficulty, length), { type: "start", seed });
   let x = seed;
   const rand = () => ((x = (x * 16807) % 2147483647) / 2147483647);
   const mistakes = [playerMistakes, playerMistakes, playerMistakes];
@@ -53,5 +53,19 @@ describe("balance", () => {
 
   it("easy is easier than normal", () => {
     expect(rates("easy", 0.35).won).toBeGreaterThan(rates("normal", 0.35).won);
+  });
+});
+
+describe("quick interview balance", () => {
+  it("one round on easy is very winnable, on normal it's a coin flip or better", () => {
+    const win = (difficulty: Difficulty, mistakes: number) => {
+      const games = Array.from({ length: 2000 }, (_, i) => playOut(i + 1, difficulty, mistakes, "quick"));
+      const rate = games.filter((g) => g.phase === "victory").length / games.length;
+      console.log(`quick / ${difficulty} / ${mistakes ? "casual" : "careful"}: won ${(rate * 100).toFixed(1)}%`);
+      return rate;
+    };
+    expect(win("easy", 0.35)).toBeGreaterThan(0.85);
+    expect(win("easy", 0)).toBeGreaterThan(0.85);
+    expect(win("normal", 0.35)).toBeGreaterThan(0.5);
   });
 });

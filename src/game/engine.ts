@@ -5,6 +5,7 @@ import type {
   GameEvent,
   GameState,
   ItemEvent,
+  GameLength,
   ItemId,
   LogEntry,
   Shell,
@@ -61,17 +62,36 @@ export const ROUNDS: RoundConfig[] = [
   },
 ];
 
+/** Quick interview: a single round with a bit of everything; winning it unlocks the whole portfolio. */
+export const QUICK_ROUNDS: RoundConfig[] = [
+  {
+    hp: 3,
+    minShells: 2,
+    maxShells: 5,
+    itemsPerLoad: 1,
+    pool: ["debugger", "coffee", "hotfix", "refactor", "mergeConflict", "prodDeploy"],
+  },
+];
+
+export const LENGTH: Record<GameLength, { label: string; rounds: RoundConfig[] }> = {
+  quick: { label: "Quick", rounds: QUICK_ROUNDS },
+  full: { label: "Full", rounds: ROUNDS },
+};
+
+export const roundsFor = (length: GameLength): RoundConfig[] => LENGTH[length].rounds;
+
 export const opponent = (side: Side): Side =>
   side === "player" ? "recruiter" : "player";
 
 const who = (side: Side) => (side === "player" ? "You" : "The Recruiter");
 
-export function createGame(seed = 1, difficulty: Difficulty = "normal"): GameState {
+export function createGame(seed = 1, difficulty: Difficulty = "normal", length: GameLength = "full"): GameState {
   return {
     phase: "intro",
     round: 0,
     roundsWon: 0,
     difficulty,
+    length,
     hp: { player: 0, recruiter: 0 },
     maxHp: { player: 0, recruiter: 0 },
     shells: [],
@@ -124,7 +144,7 @@ function popChamber(s: GameState): Shell {
 }
 
 function loadShotgun(s: GameState) {
-  const cfg = ROUNDS[s.round];
+  const cfg = roundsFor(s.length)[s.round];
   const rng = makeRng(s.rng);
   const total = rng.int(cfg.minShells, cfg.maxShells);
   const live = Math.min(
@@ -164,14 +184,14 @@ function loadShotgun(s: GameState) {
 }
 
 function startRound(s: GameState, round: number) {
-  const cfg = ROUNDS[round];
+  const cfg = roundsFor(s.length)[round];
   s.round = round;
   const playerHp = cfg.hp + DIFFICULTY[s.difficulty].playerHpBonus;
   s.maxHp = { player: playerHp, recruiter: cfg.hp };
   s.hp = { ...s.maxHp };
   s.items = { player: [], recruiter: [] };
   s.turn = "player";
-  log(s, "system", `Round ${round + 1} of ${ROUNDS.length}. Your composure: ${playerHp}. The Recruiter's: ${cfg.hp}.`, "info");
+  log(s, "system", `Round ${round + 1} of ${roundsFor(s.length).length}. Your composure: ${playerHp}. The Recruiter's: ${cfg.hp}.`, "info");
   loadShotgun(s);
 }
 
@@ -214,7 +234,7 @@ function shoot(state: GameState, side: Side, target: Side): GameState {
       log(s, "system", "You have been let go.", "danger");
     } else {
       s.roundsWon += 1;
-      s.phase = s.round === ROUNDS.length - 1 ? "victory" : "roundOver";
+      s.phase = s.round === roundsFor(s.length).length - 1 ? "victory" : "roundOver";
       log(s, "system", `Round ${s.round + 1} cleared.`, "safe");
     }
   } else {
@@ -318,7 +338,7 @@ export function reduce(state: GameState, action: Action): GameState {
     case "start":
     case "restart": {
       if (action.type === "start" && state.phase !== "intro") return state;
-      const s = createGame(action.seed ?? state.rng + 0x9e3779b9, action.difficulty ?? state.difficulty);
+      const s = createGame(action.seed ?? state.rng + 0x9e3779b9, action.difficulty ?? state.difficulty, action.length ?? state.length);
       s.eventId = state.eventId;
       startRound(s, 0);
       return s;

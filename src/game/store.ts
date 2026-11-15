@@ -3,10 +3,10 @@ import { QUIZ, type QuizQuestion } from "@/content/quiz";
 import { pickLine, type LineKey } from "@/content/recruiterLines";
 import { ACHIEVEMENTS, earnedBy, freshStats, type Achievement, type RunStats } from "./achievements";
 import { decide } from "./ai";
-import { ROUNDS, canGrantItem, createGame, reduce } from "./engine";
+import { canGrantItem, createGame, reduce, roundsFor } from "./engine";
 import { ITEMS } from "./items";
 import { sfx } from "./sound";
-import type { Action, Difficulty, GameEvent, GameState, ItemId } from "./types";
+import type { Action, Difficulty, GameEvent, GameLength, GameState, ItemId } from "./types";
 
 /** Animation timings (ms). Components read these so visuals and game flow stay in sync. */
 export const TIMING = {
@@ -90,6 +90,9 @@ interface GameStore {
 
   difficulty: Difficulty;
   setDifficulty: (d: Difficulty) => void;
+  /** Quick (one round) or Full (three rounds). */
+  length: GameLength;
+  setLength: (l: GameLength) => void;
 
   /** Pop quiz between reloads; the game pauses while it's open. */
   quiz: QuizState | null;
@@ -119,6 +122,7 @@ export function webglAvailable() {
 const TUTORIAL_KEY = "interview:tutorial-done";
 const MODE_KEY = "interview:render-mode";
 const DIFFICULTY_KEY = "interview:difficulty";
+const LENGTH_KEY = "interview:length";
 const ACHIEVEMENTS_KEY = "interview:achievements";
 
 /** Storage can throw (private mode, blocked site data), so every access is guarded. */
@@ -198,7 +202,7 @@ export const useGame = create<GameStore>((set, get) => {
   };
 
   return {
-    game: createGame(1, "easy"),
+    game: createGame(1, "easy", "quick"),
     busy: false,
     muted: false,
     dossierOpen: false,
@@ -206,6 +210,7 @@ export const useGame = create<GameStore>((set, get) => {
     renderMode: "3d",
     viewReady: false,
     difficulty: "easy",
+    length: "quick",
     quiz: null,
     bubble: null,
     unlocked: [],
@@ -224,6 +229,7 @@ export const useGame = create<GameStore>((set, get) => {
       set({
         renderMode: savedRenderMode() ?? (webglAvailable() ? "3d" : "2d"),
         difficulty: d === "normal" ? "normal" : "easy",
+        length: readPref(LENGTH_KEY) === "full" ? "full" : "quick",
         unlocked,
         viewReady: true,
       });
@@ -241,12 +247,19 @@ export const useGame = create<GameStore>((set, get) => {
       writePref(DIFFICULTY_KEY, d);
       set({ difficulty: d });
     },
+    setLength: (l) => {
+      writePref(LENGTH_KEY, l);
+      // On the intro screen, show the chosen length straight away (round count, dossier hints).
+      set((s) => ({ length: l, game: s.game.phase === "intro" ? { ...s.game, length: l } : s.game }));
+    },
 
     dispatch: (action) => {
       const { game, muted } = get();
       // New interviews use the chosen difficulty.
       const act: Action =
-        (action.type === "start" || action.type === "restart") && !action.difficulty ? { ...action, difficulty: get().difficulty } : action;
+        action.type === "start" || action.type === "restart"
+          ? { ...action, difficulty: action.difficulty ?? get().difficulty, length: action.length ?? get().length }
+          : action;
       const next = reduce(game, act);
       if (next === game) return false;
 
@@ -287,7 +300,7 @@ export const useGame = create<GameStore>((set, get) => {
       if (correct) {
         stats.quizCorrect += 1;
         if (canGrantItem(game, "player")) {
-          const pool = ROUNDS[game.round].pool;
+          const pool = roundsFor(game.length)[game.round].pool;
           reward = pool[Math.floor(Math.random() * pool.length)];
           dispatch({ type: "grantItem", side: "player", item: reward, reason: "Quiz answered" });
           if (!get().muted) sfx.sip();

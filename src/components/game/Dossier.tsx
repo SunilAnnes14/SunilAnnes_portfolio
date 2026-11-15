@@ -7,12 +7,13 @@ import { SECTIONS } from "@/content/portfolio";
 import { useGame } from "@/game/store";
 import { SECTION_COMPONENTS } from "../portfolio/Sections";
 import { AchievementList } from "./AchievementToasts";
+import { isUnlocked, unlockHint } from "@/game/unlocks";
 
 /** Slide-in folder of portfolio sections, unlocked by clearing rounds. */
 export function Dossier() {
   const open = useGame((s) => s.dossierOpen);
   const setDossier = useGame((s) => s.setDossier);
-  const roundsWon = useGame((s) => s.game.roundsWon);
+  const progress = useGame((s) => s.game);
   const lost = useGame((s) => s.game.phase === "gameOver");
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -51,7 +52,7 @@ export function Dossier() {
             <div className="flex-1 space-y-8 overflow-y-auto px-6 py-6">
               {SECTIONS.map((s) => {
                 const Comp = SECTION_COMPONENTS[s.id];
-                const unlocked = roundsWon >= s.unlockAt;
+                const unlocked = isUnlocked(s, progress);
                 return unlocked ? (
                   <Comp key={s.id} />
                 ) : (
@@ -61,7 +62,7 @@ export function Dossier() {
                       <div className="h-2 w-3/4 rounded bg-stone-800" />
                       <div className="h-2 w-1/2 rounded bg-stone-800" />
                     </div>
-                    <p className="mt-3 text-xs text-stone-500">[REDACTED] Clear round {s.unlockAt} to unlock.</p>
+                    <p className="mt-3 text-xs text-stone-500">[REDACTED] {unlockHint(s, progress)}</p>
                   </div>
                 );
               })}

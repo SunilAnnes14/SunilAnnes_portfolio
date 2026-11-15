@@ -235,3 +235,22 @@ describe("difficulty and rewards", () => {
     expect(reduce(full, { type: "grantItem", side: "player", item: "debugger" })).toBe(full);
   });
 });
+
+describe("interview length", () => {
+  it("quick is a single round: winning it is victory", () => {
+    const s = reduce(createGame(9, "easy", "quick"), { type: "start", seed: 9 });
+    expect(s.length).toBe("quick");
+    const turn = reduce(s, { type: "ready" });
+    const rigged = { ...turn, shells: ["live", "blank"] as ("live" | "blank")[], known: { player: [null, null], recruiter: [null, null] }, hp: { ...turn.hp, recruiter: 1 }, turn: "player" as const };
+    const won = reduce(rigged, { type: "shoot", side: "player", target: "recruiter" });
+    expect(won.phase).toBe("victory");
+    expect(won.roundsWon).toBe(1);
+  });
+
+  it("full keeps three rounds, and restart keeps the chosen length", () => {
+    const full = reduce(createGame(9, "easy", "full"), { type: "start", seed: 9 });
+    expect(full.length).toBe("full");
+    expect(reduce(full, { type: "restart", seed: 2 }).length).toBe("full");
+    expect(reduce(full, { type: "restart", seed: 2, length: "quick" }).length).toBe("quick");
+  });
+});

@@ -176,14 +176,15 @@ export function Controls() {
   const dispatch = useGame((s) => s.dispatch);
   const tutorial = useGame((s) => s.tutorial);
 
-  const myTurn = game.phase === "turn" && game.turn === "player" && !busy && tutorial === null;
+  const quizOpen = useGame((s) => s.quiz !== null);
+  const myTurn = game.phase === "turn" && game.turn === "player" && !busy && tutorial === null && !quizOpen;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.metaKey || e.ctrlKey || e.altKey) return;
       const s = useGame.getState();
       const k = e.key.toLowerCase();
-      if (s.tutorial !== null) return;
+      if (s.tutorial !== null || s.quiz !== null) return;
       if (k === "d") return s.setDossier(!s.dossierOpen);
       if (s.dossierOpen) return;
       const ready = s.game.phase === "turn" && s.game.turn === "player" && !s.busy;
@@ -211,7 +212,7 @@ export function Controls() {
             <ItemTray myTurn={myTurn} align="left" />
           </div>
           <div data-tour="hp" className="w-56 rounded-md bg-black/40 p-2 backdrop-blur-sm">
-            <Composure value={game.hp.player} max={game.maxHp} label="You" />
+            <Composure value={game.hp.player} max={game.maxHp.player} label="You" />
             <StatusChips />
           </div>
         </div>
@@ -220,7 +221,7 @@ export function Controls() {
           {/* phones: composure sits beside the turn banner */}
           <div className="flex w-full items-end justify-between gap-2 sm:hidden">
             <div data-tour="hp" className="rounded-md bg-black/40 p-1.5 backdrop-blur-sm">
-              <Composure value={game.hp.player} max={game.maxHp} label="You" />
+              <Composure value={game.hp.player} max={game.maxHp.player} label="You" />
             </div>
             <TurnBanner />
           </div>

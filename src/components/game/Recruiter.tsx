@@ -5,11 +5,17 @@ import { motion, useAnimate } from "motion/react";
 import { faceFor } from "@/game/face";
 import { TIMING, useGame } from "@/game/store";
 
-export function Recruiter() {
+/** `interactive` lets visitors click to poke it (used in the game's 2D view). */
+export function Recruiter({ interactive = false }: { interactive?: boolean }) {
   const game = useGame((s) => s.game);
   const busy = useGame((s) => s.busy);
+  const poke = useGame((s) => s.poke);
   const [scope, animate] = useAnimate();
   const face = faceFor(game, busy);
+  const onPoke = () => {
+    poke();
+    if (scope.current) animate(scope.current, { rotate: [0, -3, 3, -2, 0] }, { duration: 0.4 });
+  };
 
   useEffect(() => {
     const e = game.event;
@@ -30,7 +36,11 @@ export function Recruiter() {
   const thinking = game.phase === "turn" && game.turn === "recruiter" && !busy;
 
   return (
-    <div ref={scope} className="relative h-full w-full origin-bottom">
+    <div
+      ref={scope}
+      className={`relative h-full w-full origin-bottom ${interactive ? "cursor-pointer" : ""}`}
+      onClick={interactive ? onPoke : undefined}
+    >
       <svg viewBox="0 0 400 380" className="h-full w-full overflow-visible drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)]" role="img" aria-label="The Recruiter, a figure in a suit with an old CRT monitor for a head">
         <defs>
           <linearGradient id="suit" x1="0" x2="0" y1="0" y2="1">

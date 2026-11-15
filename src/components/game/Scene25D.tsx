@@ -53,7 +53,7 @@ export function Scene25D() {
         <Backdrop />
       </motion.div>
       <motion.div className="absolute bottom-[49.5%] left-1/2 h-[min(46vh,70vw)] w-[min(48vh,74vw)] -translate-x-1/2" style={{ x: midX, y: midY }}>
-        <Recruiter />
+        <Recruiter interactive />
       </motion.div>
       <motion.div className="absolute inset-0" style={{ x: frontX, rotateZ: frontRot }}>
         <Desk />

@@ -181,7 +181,7 @@ export function Hud() {
 
         {playing && (
           <div className="pointer-events-auto absolute right-3 top-[92px] rounded-md bg-black/40 px-3 py-2 backdrop-blur-sm sm:left-1/2 sm:right-auto sm:top-4 sm:-translate-x-1/2">
-            <Composure value={game.hp.recruiter} max={game.maxHp} label="Recruiter" align="center" />
+            <Composure value={game.hp.recruiter} max={game.maxHp.recruiter} label="Recruiter" align="center" />
           </div>
         )}
 

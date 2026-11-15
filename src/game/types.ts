@@ -46,13 +46,17 @@ export type ItemEvent = {
 
 export type GameEvent = LoadEvent | ShotEvent | ItemEvent;
 
+export type Difficulty = "easy" | "normal";
+
 export type Action =
-  | { type: "start"; seed?: number }
-  | { type: "restart"; seed?: number }
+  | { type: "start"; seed?: number; difficulty?: Difficulty }
+  | { type: "restart"; seed?: number; difficulty?: Difficulty }
   | { type: "load" }
   | { type: "ready" }
   | { type: "shoot"; side: Side; target: Side }
   | { type: "useItem"; side: Side; slot: number }
+  /** A reward from outside the shotgun loop, e.g. the pop quiz. */
+  | { type: "grantItem"; side: Side; item: ItemId; reason?: string }
   | { type: "nextRound" };
 
 export interface LogEntry {
@@ -67,8 +71,9 @@ export interface GameState {
   /** Zero-based round index. */
   round: number;
   roundsWon: number;
+  difficulty: Difficulty;
   hp: Record<Side, number>;
-  maxHp: number;
+  maxHp: Record<Side, number>;
   /** Remaining shells; index 0 is the chambered one. */
   shells: Shell[];
   /** What each side privately knows, aligned with `shells`. */

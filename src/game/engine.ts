@@ -1,6 +1,7 @@
 import { makeRng, shuffle } from "./rng";
 import type {
   Action,
+  Difficulty,
   GameEvent,
   GameState,
   ItemEvent,
@@ -12,8 +13,12 @@ import type {
 
 export const SIDES: Side[] = ["player", "recruiter"];
 export const MAX_ITEMS = 6;
-/** "You came prepared": the player gets this many extra items per load. */
-export const PLAYER_BONUS_ITEMS = 1;
+
+/** Player-side advantages per difficulty. The Recruiter's mistake rates live in ai.ts. */
+export const DIFFICULTY: Record<Difficulty, { label: string; playerHpBonus: number; playerBonusItems: number }> = {
+  easy: { label: "Easy", playerHpBonus: 1, playerBonusItems: 2 },
+  normal: { label: "Normal", playerHpBonus: 0, playerBonusItems: 1 },
+};
 
 export interface RoundConfig {
   hp: number;
@@ -61,13 +66,14 @@ export const opponent = (side: Side): Side =>
 
 const who = (side: Side) => (side === "player" ? "You" : "The Recruiter");
 
-export function createGame(seed = 1): GameState {
+export function createGame(seed = 1, difficulty: Difficulty = "normal"): GameState {
   return {
     phase: "intro",
     round: 0,
     roundsWon: 0,
+    difficulty,
     hp: { player: 0, recruiter: 0 },
-    maxHp: 0,
+    maxHp: { player: 0, recruiter: 0 },
     shells: [],
     known: { player: [], recruiter: [] },
     loadInfo: { live: 0, blank: 0 },
@@ -87,6 +93,7 @@ function clone(s: GameState): GameState {
   return {
     ...s,
     hp: { ...s.hp },
+    maxHp: { ...s.maxHp },
     shells: [...s.shells],
     known: { player: [...s.known.player], recruiter: [...s.known.recruiter] },
     loadInfo: { ...s.loadInfo },
@@ -131,7 +138,7 @@ function loadShotgun(s: GameState) {
 
   const dealt: Record<Side, ItemId[]> = { player: [], recruiter: [] };
   for (const side of SIDES) {
-    const count = cfg.itemsPerLoad + (side === "player" ? PLAYER_BONUS_ITEMS : 0);
+    const count = cfg.itemsPerLoad + (side === "player" ? DIFFICULTY[s.difficulty].playerBonusItems : 0);
     for (let i = 0; i < count && s.items[side].length < MAX_ITEMS; i++) {
       const item = cfg.pool[rng.int(0, cfg.pool.length - 1)];
       s.items[side].push(item);
@@ -159,11 +166,12 @@ function loadShotgun(s: GameState) {
 function startRound(s: GameState, round: number) {
   const cfg = ROUNDS[round];
   s.round = round;
-  s.maxHp = cfg.hp;
-  s.hp = { player: cfg.hp, recruiter: cfg.hp };
+  const playerHp = cfg.hp + DIFFICULTY[s.difficulty].playerHpBonus;
+  s.maxHp = { player: playerHp, recruiter: cfg.hp };
+  s.hp = { ...s.maxHp };
   s.items = { player: [], recruiter: [] };
   s.turn = "player";
-  log(s, "system", `Round ${round + 1} of ${ROUNDS.length}. Composure set to ${cfg.hp}.`, "info");
+  log(s, "system", `Round ${round + 1} of ${ROUNDS.length}. Your composure: ${playerHp}. The Recruiter's: ${cfg.hp}.`, "info");
   loadShotgun(s);
 }
 
@@ -173,7 +181,7 @@ export function canUseItem(state: GameState, side: Side, slot: number): boolean 
   if (!item || state.shells.length === 0) return false;
   switch (item) {
     case "coffee":
-      return state.hp[side] < state.maxHp;
+      return state.hp[side] < state.maxHp[side];
     case "mergeConflict":
       return !state.skip[opponent(side)];
     case "prodDeploy":
@@ -277,7 +285,7 @@ function applyItem(state: GameState, side: Side, slot: number): GameState {
       break;
     }
     case "coffee": {
-      s.hp[side] = Math.min(s.maxHp, s.hp[side] + 1);
+      s.hp[side] = Math.min(s.maxHp[side], s.hp[side] + 1);
       log(s, side, `${who(side)} drank coffee. +1 composure.`, "safe");
       break;
     }
@@ -310,7 +318,7 @@ export function reduce(state: GameState, action: Action): GameState {
     case "start":
     case "restart": {
       if (action.type === "start" && state.phase !== "intro") return state;
-      const s = createGame(action.seed ?? state.rng + 0x9e3779b9);
+      const s = createGame(action.seed ?? state.rng + 0x9e3779b9, action.difficulty ?? state.difficulty);
       s.eventId = state.eventId;
       startRound(s, 0);
       return s;
@@ -335,7 +343,19 @@ export function reduce(state: GameState, action: Action): GameState {
       return shoot(state, action.side, action.target);
     case "useItem":
       return applyItem(state, action.side, action.slot);
+    case "grantItem": {
+      if (!canGrantItem(state, action.side)) return state;
+      const s = clone(state);
+      s.items[action.side].push(action.item);
+      log(s, action.side, `${action.reason ?? "Bonus"}: ${who(action.side)} got an extra item.`, "safe");
+      return s;
+    }
   }
+}
+
+/** Rewards can arrive while a round is in play, as long as there's room on the desk. */
+export function canGrantItem(state: GameState, side: Side): boolean {
+  return (state.phase === "turn" || state.phase === "loading") && state.items[side].length < MAX_ITEMS;
 }
 
 /** Probability, from `side`'s point of view, that the chambered shell is live. */

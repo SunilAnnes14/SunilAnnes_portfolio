@@ -57,6 +57,21 @@ The site is fully static, so any Next.js host works. On Vercel:
 | Refactor | Invert the chambered shell |
 | Friday Deploy | Next live shot deals 2 |
 
+### Extras
+
+- **Difficulty:** Easy (the default) gives you +1 composure, 2 bonus items per reload, and a Recruiter that makes more mistakes. Normal is the even fight. The choice is saved in the browser.
+- **Pop quiz:** on every second reload the Recruiter asks a dev/AI interview question (`src/content/quiz.ts`). A correct answer earns a random item from the round's pool. The game pauses while the quiz is open.
+- **Speech bubbles:** the Recruiter reacts to shots, items and reloads (`src/content/recruiterLines.ts`). Click it to poke it.
+- **Achievements:** 8 unlockables (`src/game/achievements.ts`), shown as pop-ups, listed on the end screens and in the dossier, and saved in the browser.
+
 ### Balance
 
-`src/game/balance.test.ts` plays 2,000 games with a careful player against the AI. A careful player clears round 1 about 88% of the time and wins the whole interview about 42% of the time. Tune `MISTAKE_RATE` (ai.ts), and `PLAYER_BONUS_ITEMS` and `ROUNDS` (engine.ts).
+`src/game/balance.test.ts` plays 2,000 games per setting against the AI:
+
+| Mode | Player | Clears round 1 | Wins the interview |
+|---|---|---|---|
+| Easy | careful | ~97% | ~72% |
+| Easy | casual (35% hunches) | ~96% | ~68% |
+| Normal | careful | ~89% | ~42% |
+
+Tune `MISTAKE_RATES` (ai.ts), and `DIFFICULTY` and `ROUNDS` (engine.ts).

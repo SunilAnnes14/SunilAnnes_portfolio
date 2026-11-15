@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { SECTIONS } from "@/content/portfolio";
 import { useGame } from "@/game/store";
 import { SECTION_COMPONENTS } from "../portfolio/Sections";
+import { AchievementList } from "./AchievementToasts";
 
 /** Slide-in folder of portfolio sections, unlocked by clearing rounds. */
 export function Dossier() {
@@ -64,6 +65,7 @@ export function Dossier() {
                   </div>
                 );
               })}
+              <AchievementList />
             </div>
             <footer className="border-t border-stone-800 px-6 py-3 text-xs text-stone-500">
               {lost ? "Didn't make it? " : "In a hurry? "}

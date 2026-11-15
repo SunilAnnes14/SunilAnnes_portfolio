@@ -129,12 +129,26 @@ function RecruiterRig() {
   const face = faceFor(game, busy);
   const thinking = game.phase === "turn" && game.turn === "recruiter" && !busy;
   const event = game.event;
+  const poke = useGame((s) => s.poke);
+  const pokedAt = useRef(-Infinity);
+  const [hover, setHover] = useState(false);
+
+  useEffect(() => {
+    document.body.style.cursor = hover ? "pointer" : "";
+    return () => {
+      document.body.style.cursor = "";
+    };
+  }, [hover]);
 
   useFrame((state) => {
     const g = group.current;
     if (!g) return;
     let z = 0;
     let rx = 0;
+    // A poke makes it flinch.
+    const sincePoke = (performance.now() - pokedAt.current) / 1000;
+    const flinch = sincePoke < 0.6 ? Math.sin(sincePoke * 30) * 0.05 * (1 - sincePoke / 0.6) : 0;
+    g.rotation.z = flinch;
     if (event?.kind === "shot" && event.shell === "live" && event.target === "recruiter") {
       const t = elapsed() - TIMING.fireAt / 1000;
       if (t > 0 && t < 1.2) {
@@ -150,7 +164,16 @@ function RecruiterRig() {
   });
 
   return (
-    <group ref={group}>
+    <group
+      ref={group}
+      onClick={(e) => {
+        e.stopPropagation();
+        pokedAt.current = performance.now();
+        poke();
+      }}
+      onPointerOver={(e) => (e.stopPropagation(), setHover(true))}
+      onPointerOut={() => setHover(false)}
+    >
       <Recruiter face={face.text} tone={face.tone} thinking={thinking} />
     </group>
   );
@@ -330,8 +353,9 @@ function DeskItems() {
   const game = useGame((s) => s.game);
   const busy = useGame((s) => s.busy);
   const tutorial = useGame((s) => s.tutorial);
+  const quizOpen = useGame((s) => s.quiz !== null);
   const dispatch = useGame((s) => s.dispatch);
-  const myTurn = game.phase === "turn" && game.turn === "player" && !busy && tutorial === null;
+  const myTurn = game.phase === "turn" && game.turn === "player" && !busy && tutorial === null && !quizOpen;
   const row = (n: number, i: number) => (i - (n - 1) / 2) * 0.14;
   return (
     <>

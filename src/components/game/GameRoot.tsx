@@ -3,11 +3,14 @@
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { useGame } from "@/game/store";
+import { AchievementToasts } from "./AchievementToasts";
 import { Controls } from "./Controls";
 import { Dossier } from "./Dossier";
 import { Effects } from "./Effects";
 import { Hud } from "./Hud";
 import { Overlays } from "./Overlays";
+import { QuizOverlay } from "./QuizOverlay";
+import { RecruiterBubble } from "./RecruiterBubble";
 import { Scene25D } from "./Scene25D";
 import { Tutorial } from "./Tutorial";
 
@@ -27,7 +30,8 @@ function useDirector() {
   const busy = useGame((s) => s.busy);
   const eventId = useGame((s) => s.game.eventId);
   const tutorial = useGame((s) => s.tutorial);
-  useEffect(() => useGame.getState().scheduleNext(), [phase, turn, busy, eventId, tutorial]);
+  const quizOpen = useGame((s) => s.quiz !== null);
+  useEffect(() => useGame.getState().scheduleNext(), [phase, turn, busy, eventId, tutorial, quizOpen]);
 }
 
 export default function GameRoot() {
@@ -35,18 +39,21 @@ export default function GameRoot() {
   const renderMode = useGame((s) => s.renderMode);
   const ready = useGame((s) => s.viewReady);
 
-  // Pick the view once on the client: saved choice, else 3D when WebGL works.
-  useEffect(() => useGame.getState().initRenderMode(), []);
+  // Read saved preferences once on the client: view, difficulty, achievements.
+  useEffect(() => useGame.getState().initClient(), []);
 
   return (
     <main className="relative h-dvh w-full select-none overflow-clip bg-[#060708] text-stone-200">
       {ready && (renderMode === "3d" ? <GameScene3D /> : <Scene25D />)}
       <Hud />
+      <RecruiterBubble />
       <Controls />
       <Effects />
       <Overlays />
+      <QuizOverlay />
       <Tutorial />
       <Dossier />
+      <AchievementToasts />
     </main>
   );
 }

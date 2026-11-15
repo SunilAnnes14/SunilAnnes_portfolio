@@ -1,8 +1,11 @@
 import { canUseItem, liveProbability, opponent } from "./engine";
-import type { Action, GameState, ItemId, Side } from "./types";
+import type { Action, Difficulty, GameState, ItemId, Side } from "./types";
 
 /** Chance per round that the AI makes a gut call instead of the best play. */
-export const MISTAKE_RATE = [0.4, 0.3, 0.2];
+export const MISTAKE_RATES: Record<Difficulty, number[]> = {
+  easy: [0.55, 0.45, 0.35],
+  normal: [0.4, 0.3, 0.2],
+};
 
 /**
  * Picks the next action for `me` (the Recruiter by default). Called repeatedly
@@ -12,7 +15,7 @@ export function decide(
   state: GameState,
   rand: () => number = Math.random,
   me: Side = "recruiter",
-  mistakeRate: number[] = MISTAKE_RATE,
+  mistakeRate: number[] = MISTAKE_RATES[state.difficulty],
 ): Action {
   const them = opponent(me);
   const items = state.items[me];

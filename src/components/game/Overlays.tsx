@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { SECTIONS, profile } from "@/content/portfolio";
+import { DIFFICULTY } from "@/game/engine";
 import { ITEMS } from "@/game/items";
 import { useGame } from "@/game/store";
 import { unlockAudio } from "@/game/sound";
-import type { ItemId } from "@/game/types";
+import type { Difficulty, ItemId } from "@/game/types";
+import { AchievementList } from "./AchievementToasts";
 import { ItemIcon } from "./icons";
 
 function Panel({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
@@ -35,6 +37,40 @@ const secondary =
 
 const RULE_ITEMS: ItemId[] = ["debugger", "hotfix", "coffee", "mergeConflict", "refactor", "prodDeploy", "stackTrace"];
 
+const DIFFICULTY_BLURB: Record<Difficulty, string> = {
+  easy: "+1 composure, 2 bonus items per reload, and a Recruiter who second-guesses itself.",
+  normal: "An even fight. The Recruiter plays the odds and makes fewer mistakes.",
+};
+
+function DifficultyPicker() {
+  const difficulty = useGame((s) => s.difficulty);
+  const setDifficulty = useGame((s) => s.setDifficulty);
+  return (
+    <fieldset className="mt-5">
+      <legend className="text-[10px] uppercase tracking-[0.3em] text-stone-500">Difficulty</legend>
+      <div className="mt-2 grid grid-cols-2 gap-2" role="radiogroup">
+        {(["easy", "normal"] as const).map((d) => (
+          <button
+            key={d}
+            role="radio"
+            aria-checked={difficulty === d}
+            onClick={() => setDifficulty(d)}
+            className={`rounded-md border px-3 py-2 text-left transition ${
+              difficulty === d ? "border-amber-300/70 bg-amber-300/10" : "border-stone-700 hover:border-stone-500"
+            }`}
+          >
+            <span className="block text-sm font-bold uppercase tracking-[0.2em] text-stone-100">
+              {DIFFICULTY[d].label}
+              {d === "easy" && <span className="ml-2 text-[10px] font-normal tracking-widest text-emerald-300">recommended</span>}
+            </span>
+            <span className="mt-0.5 block text-[11px] leading-snug text-stone-400">{DIFFICULTY_BLURB[d]}</span>
+          </button>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
 function Intro() {
   const dispatch = useGame((s) => s.dispatch);
   const start = () => {
@@ -61,9 +97,14 @@ function Intro() {
           Each round you win reveals more of my portfolio.
         </li>
       </ol>
-      <p className="mt-4 text-xs text-stone-500">New here? A 30-second tutorial starts on your first turn. You can skip it.</p>
+      <p className="mt-4 text-xs text-stone-500">
+        New here? A 30-second tutorial starts on your first turn. Between reloads the Recruiter may throw you a{" "}
+        <span className="text-emerald-300">pop quiz</span>: answer right for a free item.
+      </p>
 
-      <div className="mt-5 flex flex-wrap gap-2">
+      <DifficultyPicker />
+
+      <div className="mt-4 flex flex-wrap gap-2">
         {RULE_ITEMS.map((id) => (
           <span key={id} title={ITEMS[id].effect} className="flex items-center gap-1.5 rounded border border-stone-700 px-2 py-1 text-[11px] text-stone-400">
             <ItemIcon id={id} className="h-3.5 w-3.5 text-amber-200/80" />
@@ -72,7 +113,7 @@ function Intro() {
         ))}
       </div>
 
-      <div className="mt-8 flex flex-wrap items-center gap-3">
+      <div className="mt-7 flex flex-wrap items-center gap-3">
         <button autoFocus onClick={start} className={primary}>Begin interview</button>
         <Link href="/" className={secondary}>Back to portfolio</Link>
       </div>
@@ -106,6 +147,8 @@ function RoundOver() {
 function GameOver() {
   const dispatch = useGame((s) => s.dispatch);
   const roundsWon = useGame((s) => s.game.roundsWon);
+  const difficulty = useGame((s) => s.difficulty);
+  const setDifficulty = useGame((s) => s.setDifficulty);
   return (
     <Panel delay={1.4}>
       <p className="text-[10px] uppercase tracking-[0.4em] text-red-400">Application status: rejected</p>
@@ -114,8 +157,22 @@ function GameOver() {
         {roundsWon > 0 ? `You made it through ${roundsWon} round${roundsWon > 1 ? "s" : ""}. ` : ""}
         The good news: I&apos;m not the Recruiter. Here&apos;s the whole portfolio anyway.
       </p>
+      <div className="mt-5">
+        <AchievementList />
+      </div>
       <div className="mt-7 flex flex-wrap gap-3">
         <button autoFocus onClick={() => dispatch({ type: "restart", seed: (Date.now() * 7) >>> 0 })} className={primary}>Reapply</button>
+        {difficulty === "normal" && (
+          <button
+            onClick={() => {
+              setDifficulty("easy");
+              dispatch({ type: "restart", seed: (Date.now() * 3) >>> 0, difficulty: "easy" });
+            }}
+            className={secondary}
+          >
+            Reapply on Easy
+          </button>
+        )}
         <Link href="/" className={secondary}>View portfolio</Link>
       </div>
     </Panel>
@@ -125,6 +182,8 @@ function GameOver() {
 function Victory() {
   const dispatch = useGame((s) => s.dispatch);
   const setDossier = useGame((s) => s.setDossier);
+  const difficulty = useGame((s) => s.difficulty);
+  const setDifficulty = useGame((s) => s.setDifficulty);
   return (
     <Panel delay={1.4}>
       <p className="text-[10px] uppercase tracking-[0.4em] text-amber-400">Offer extended</p>
@@ -138,9 +197,24 @@ function Victory() {
           <a key={l.href} className="text-stone-300 underline underline-offset-4" href={l.href} target="_blank" rel="noreferrer">{l.label}</a>
         ))}
       </div>
+      <div className="mt-5">
+        <AchievementList />
+      </div>
       <div className="mt-7 flex flex-wrap gap-3">
         <button autoFocus onClick={() => setDossier(true)} className={primary}>Open dossier</button>
-        <button onClick={() => dispatch({ type: "restart", seed: (Date.now() * 13) >>> 0 })} className={secondary}>Play again</button>
+        {difficulty === "easy" ? (
+          <button
+            onClick={() => {
+              setDifficulty("normal");
+              dispatch({ type: "restart", seed: (Date.now() * 13) >>> 0, difficulty: "normal" });
+            }}
+            className={secondary}
+          >
+            Try Normal mode
+          </button>
+        ) : (
+          <button onClick={() => dispatch({ type: "restart", seed: (Date.now() * 13) >>> 0 })} className={secondary}>Play again</button>
+        )}
       </div>
     </Panel>
   );

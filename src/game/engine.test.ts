@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { decide } from "./ai";
-import { PLAYER_BONUS_ITEMS, ROUNDS, canUseItem, createGame, liveProbability, reduce } from "./engine";
+import { DIFFICULTY, ROUNDS, canGrantItem, canUseItem, createGame, liveProbability, reduce } from "./engine";
 import type { Action, GameState, ItemId, Shell, Side } from "./types";
 
 /** A game in the "turn" phase with a rigged magazine and inventories. */
@@ -17,7 +17,7 @@ function rig(opts: {
   return {
     ...s,
     round,
-    maxHp: ROUNDS[round].hp,
+    maxHp: { player: ROUNDS[round].hp, recruiter: ROUNDS[round].hp },
     hp: { player: ROUNDS[round].hp, recruiter: ROUNDS[round].hp, ...opts.hp },
     shells: opts.shells,
     known: { player: opts.shells.map(() => null), recruiter: opts.shells.map(() => null) },
@@ -38,7 +38,7 @@ describe("loading", () => {
       expect(live).toBeGreaterThanOrEqual(1);
       expect(s.loadInfo.blank).toBeGreaterThanOrEqual(1);
       expect(s.shells.length).toBeLessThanOrEqual(ROUNDS[0].maxShells);
-      expect(s.items.player).toHaveLength(ROUNDS[0].itemsPerLoad + PLAYER_BONUS_ITEMS);
+      expect(s.items.player).toHaveLength(ROUNDS[0].itemsPerLoad + DIFFICULTY.normal.playerBonusItems);
     }
   });
 
@@ -207,5 +207,31 @@ describe("recruiter AI", () => {
       }
       expect(["gameOver", "victory"]).toContain(s.phase);
     }
+  });
+});
+
+describe("difficulty and rewards", () => {
+  it("easy gives the player extra composure and items, not the Recruiter", () => {
+    const s = reduce(createGame(5, "easy"), { type: "start", seed: 5 });
+    expect(s.difficulty).toBe("easy");
+    expect(s.maxHp.player).toBe(ROUNDS[0].hp + DIFFICULTY.easy.playerHpBonus);
+    expect(s.maxHp.recruiter).toBe(ROUNDS[0].hp);
+    expect(s.items.player).toHaveLength(ROUNDS[0].itemsPerLoad + DIFFICULTY.easy.playerBonusItems);
+    expect(s.items.recruiter).toHaveLength(ROUNDS[0].itemsPerLoad);
+  });
+
+  it("restart keeps the chosen difficulty unless a new one is given", () => {
+    const easy = reduce(createGame(5, "easy"), { type: "start", seed: 5 });
+    expect(reduce(easy, { type: "restart", seed: 6 }).difficulty).toBe("easy");
+    expect(reduce(easy, { type: "restart", seed: 6, difficulty: "normal" }).difficulty).toBe("normal");
+  });
+
+  it("grantItem adds an item during play and respects the item cap", () => {
+    const s = rig({ shells: ["live", "blank"] });
+    const granted = reduce(s, { type: "grantItem", side: "player", item: "coffee", reason: "Quiz" });
+    expect(granted.items.player).toEqual(["coffee"]);
+    const full = rig({ shells: ["live"], items: { player: Array<"coffee">(6).fill("coffee") } });
+    expect(canGrantItem(full, "player")).toBe(false);
+    expect(reduce(full, { type: "grantItem", side: "player", item: "debugger" })).toBe(full);
   });
 });

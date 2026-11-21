@@ -156,7 +156,7 @@ export function ProjectsSection({ projects, moreUrl }: { projects: ShellProject[
                 className="rounded-xl border border-[#3a2616] p-3 shadow-[inset_0_10px_30px_rgba(0,0,0,0.5)] sm:p-4"
                 style={{ background: "repeating-linear-gradient(90deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 34px), linear-gradient(180deg, #4a2d18, #2e1b0e)" }}
               >
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {projects.map((p, i) => (
                     <Shell
                       key={p.id}

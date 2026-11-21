@@ -58,28 +58,12 @@ export const projects: Project[] = [
     repo: "https://github.com/SunilAnnes14/chennai-floodwatch",
   },
   {
-    title: "MoviQ",
-    tag: "Full-stack · AI",
-    blurb:
-      "An AI-powered social movie platform (formerly CineVault): a personal film vault, ratings and reviews, friends, movie communities with real-time group chat, watch polls and movie nights, plus six AI features including recommendations and spoiler detection.",
-    stack: ["Angular", "TypeScript", "Node.js", "Express", "Socket.IO", "MongoDB"],
-    repo: "https://github.com/SunilAnnes14/movie-review-system",
-  },
-  {
     title: "Stavlos AI",
     tag: "AI agents · In progress",
     blurb:
       "A risk-first, explainable multi-agent DeFi trading agent: a Scout argues for each trade, a Bear argues against it, and a deterministic Risk Guardian can veto it. Runs in paper mode on replayed markets and writes a verifiable Trade Passport for every decision, including rejected ones.",
     stack: ["Python", "FastAPI", "Pydantic", "Next.js", "TypeScript", "SQLite"],
     repo: "https://github.com/SunilAnnes14/stavlos-master",
-  },
-  {
-    title: "CareerGapAI",
-    tag: "AI · In progress",
-    blurb:
-      "Tells you which skills stand between you and a target job. It analyzes up to 30 live Google Jobs postings, measures how often each skill is asked for, scores your gaps by demand and by how many skills they unlock, and orders them into a prerequisite-aware learning roadmap.",
-    stack: ["Python", "FastAPI", "SerpAPI", "Pydantic"],
-    repo: "https://github.com/SunilAnnes14/CareerGapAI",
   },
   {
     title: "Voice Cloner",
@@ -97,6 +81,31 @@ export const projects: Project[] = [
     stack: ["React 19", "TypeScript", "Convex", "Tailwind v4", "Framer Motion"],
     href: "https://attividuuu.vercel.app/",
     repo: "https://github.com/SunilAnnes14/kolly-guess-game",
+  },
+];
+
+/**
+ * Not shown on the site yet. To feature one, move it into `projects` above
+ * (its shell, description and mini demo are already set up in projectHighlights.ts).
+ */
+export const heldBackProjects: Project[] = [
+  {
+    // Add back once MoviQ is deployed, with its live URL in `href`.
+    title: "MoviQ",
+    tag: "Full-stack · AI",
+    blurb:
+      "An AI-powered social movie platform (formerly CineVault): a personal film vault, ratings and reviews, friends, movie communities with real-time group chat, watch polls and movie nights, plus six AI features including recommendations and spoiler detection.",
+    stack: ["Angular", "TypeScript", "Node.js", "Express", "Socket.IO", "MongoDB"],
+    repo: "https://github.com/SunilAnnes14/movie-review-system",
+  },
+  {
+    // Backend-only and still early; feature it once it has a frontend or a demo.
+    title: "CareerGapAI",
+    tag: "AI · In progress",
+    blurb:
+      "Tells you which skills stand between you and a target job. It analyzes up to 30 live Google Jobs postings, measures how often each skill is asked for, scores your gaps by demand and by how many skills they unlock, and orders them into a prerequisite-aware learning roadmap.",
+    stack: ["Python", "FastAPI", "SerpAPI", "Pydantic"],
+    repo: "https://github.com/SunilAnnes14/CareerGapAI",
   },
 ];
 
@@ -122,7 +131,7 @@ export const experience: Job[] = [
     role: "Full-stack & AI builder",
     period: "2024 – present",
     points: [
-      "Built MoviQ (Angular + Node.js + Socket.IO + MongoDB), CareerGapAI, Stavlos AI (multi-agent trading in paper mode), Kolly Guess Game (React 19 + Convex) and a Web3 smart-contract dApp.",
+      "Built Stavlos AI (multi-agent trading in paper mode), Voice Cloner, CareerGapAI, Kolly Guess Game (React 19 + Convex) and a Web3 smart-contract dApp.",
       "Co-built Chennai Flood Watch with team CR7 Flows: a live flood-safety site with React, Leaflet and FastAPI.",
     ],
   },

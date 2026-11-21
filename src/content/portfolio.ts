@@ -28,8 +28,8 @@ export const profile = {
 
 export const skills: { group: string; items: string[] }[] = [
   { group: "Languages", items: ["TypeScript", "JavaScript", "Python", "Java", "C", "SQL", "HTML & CSS"] },
-  { group: "Frontend", items: ["Angular", "React", "Next.js", "Tailwind CSS", "RxJS", "Sass", "Three.js"] },
-  { group: "Backend & data", items: ["Node.js", "Express", "Flask", "Spring Boot", "MongoDB", "PostgreSQL", "MySQL", "Firebase"] },
+  { group: "Frontend", items: ["Angular", "React", "Next.js", "Tailwind CSS", "RxJS", "Sass", "Three.js", "Leaflet"] },
+  { group: "Backend & data", items: ["Node.js", "Express", "FastAPI", "Flask", "Socket.IO", "Spring Boot", "MongoDB", "PostgreSQL", "MySQL", "SQLite", "Firebase"] },
   { group: "AI & ML", items: ["PyTorch", "Scikit-learn", "Pandas", "Jupyter", "Matplotlib", "librosa"] },
   { group: "Web3", items: ["Solidity", "Hardhat", "Ethers.js"] },
   { group: "Tools", items: ["Git", "Docker", "Linux", "Vercel", "AWS", "Postman", "Figma"] },
@@ -49,6 +49,31 @@ export const projects: Project[] = [
   // Only the strongest work goes here; The Interview has its own featured section on the homepage,
   // and everything else is one click away via profile.moreProjectsUrl.
   {
+    title: "Chennai Flood Watch",
+    tag: "Full-stack · Team project",
+    blurb:
+      "A flood-safety website for Chennai, built with team CR7 Flows: live rainfall for 8 areas, citizen flood reports that admins verify, street-level flood forecasts from rainfall, flood history and terrain, road closures and safer driving routes, all on Leaflet maps.",
+    stack: ["React", "Vite", "Tailwind CSS", "Leaflet", "Python", "FastAPI", "SQLite"],
+    href: "https://flows-cr7.vercel.app/",
+    repo: "https://github.com/SunilAnnes14/chennai-floodwatch",
+  },
+  {
+    title: "MoviQ",
+    tag: "Full-stack · AI",
+    blurb:
+      "An AI-powered social movie platform (formerly CineVault): a personal film vault, ratings and reviews, friends, movie communities with real-time group chat, watch polls and movie nights, plus six AI features including recommendations and spoiler detection.",
+    stack: ["Angular", "TypeScript", "Node.js", "Express", "Socket.IO", "MongoDB"],
+    repo: "https://github.com/SunilAnnes14/movie-review-system",
+  },
+  {
+    title: "Stavlos AI",
+    tag: "AI agents · In progress",
+    blurb:
+      "A risk-first, explainable multi-agent DeFi trading agent: a Scout argues for each trade, a Bear argues against it, and a deterministic Risk Guardian can veto it. Runs in paper mode on replayed markets and writes a verifiable Trade Passport for every decision, including rejected ones.",
+    stack: ["Python", "FastAPI", "Pydantic", "Next.js", "TypeScript", "SQLite"],
+    repo: "https://github.com/SunilAnnes14/stavlos-master",
+  },
+  {
     title: "CareerGapAI",
     tag: "AI · In progress",
     blurb:
@@ -63,14 +88,6 @@ export const projects: Project[] = [
       "Neural text-to-speech with zero-shot voice cloning: give it 6–30 seconds of someone speaking and it reads any text aloud in that voice, in 17 languages. Built on Coqui XTTS-v2 with an audio preprocessing pipeline, cached speaker embeddings, a FastAPI service and a browser recorder, plus a consent check and an AI-generated label on every output.",
     stack: ["Python", "PyTorch", "Coqui XTTS-v2", "FastAPI", "librosa"],
     repo: "https://github.com/SunilAnnes14/voice-cloner",
-  },
-  {
-    title: "CineVault",
-    tag: "Full-stack",
-    blurb:
-      "A movie review and rating platform with real-time search, genre filters, 5-star ratings, reviews and watchlists. JWT auth with role-based access gives admins catalog management and review moderation.",
-    stack: ["Angular", "TypeScript", "Node.js", "Express", "MongoDB"],
-    repo: "https://github.com/SunilAnnes14/movie-review-system",
   },
   {
     title: "Kolly Guess Game",
@@ -105,7 +122,8 @@ export const experience: Job[] = [
     role: "Full-stack & AI builder",
     period: "2024 – present",
     points: [
-      "Built CareerGapAI, CineVault (Angular + Node.js + MongoDB), Kolly Guess Game (React 19 + Convex) and a Web3 smart-contract dApp.",
+      "Built MoviQ (Angular + Node.js + Socket.IO + MongoDB), CareerGapAI, Stavlos AI (multi-agent trading in paper mode), Kolly Guess Game (React 19 + Convex) and a Web3 smart-contract dApp.",
+      "Co-built Chennai Flood Watch with team CR7 Flows: a live flood-safety site with React, Leaflet and FastAPI.",
     ],
   },
   {

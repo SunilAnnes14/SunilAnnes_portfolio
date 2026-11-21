@@ -9,7 +9,8 @@ import type { ShellProject } from "@/content/projectHighlights";
  * the flight with transforms only.
  */
 export function ShellArt({ project, inChamber = false }: { project: ShellProject; inChamber?: boolean }) {
-  const long = project.title.length > 11;
+  const name = project.shellName ?? project.title;
+  const long = name.length > 11;
   const gid = `hull-${project.id}`;
   return (
     <motion.div
@@ -57,7 +58,7 @@ export function ShellArt({ project, inChamber = false }: { project: ShellProject
           style={{ fontFamily: "var(--font-mono-ui), monospace" }}
           {...(long ? { textLength: 118, lengthAdjust: "spacingAndGlyphs" } : {})}
         >
-          {project.title.toUpperCase()}
+          {name.toUpperCase()}
         </text>
       </svg>
     </motion.div>

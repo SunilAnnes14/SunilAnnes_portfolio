@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { experience, profile, projects, skills } from "@/content/portfolio";
+import { experience, profile, skills } from "@/content/portfolio";
+import { projectHighlights } from "@/content/projectHighlights";
+import { ProjectsSection } from "@/components/site/projects/ProjectsSection";
 import { HeroVisual } from "@/components/site/HeroVisual";
 import { RoleTicker } from "@/components/site/RoleTicker";
 import { SiteNav } from "@/components/site/SiteNav";
@@ -134,36 +136,7 @@ export default function Home() {
         {/* work */}
         <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeading id="work" eyebrow="Work" title="Project highlights" />
-          <ul className="grid gap-5 md:grid-cols-2">
-            {projects.map((p) => (
-              <li key={p.title} className="group flex flex-col rounded-lg border border-stone-800 bg-[#0d0e10] p-5 transition hover:border-amber-300/40">
-                {p.tag && <span className="mb-3 w-fit rounded bg-amber-300/10 px-2 py-0.5 text-[10px] uppercase tracking-widest text-amber-200">{p.tag}</span>}
-                <h3 className="font-display text-xl text-stone-100">{p.title}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-stone-400">{p.blurb}</p>
-                <p className="mt-4 text-[11px] uppercase tracking-wider text-stone-500">{p.stack.join(" · ")}</p>
-                <div className="mt-4 flex gap-4 text-sm">
-                  {p.href && (
-                    <a className="text-amber-200 underline-offset-4 hover:underline" href={p.href} {...(p.href.startsWith("/") ? {} : { target: "_blank", rel: "noreferrer" })}>
-                      {p.href.startsWith("/") ? "Play →" : "Live →"}
-                    </a>
-                  )}
-                  {p.repo && (
-                    <a className="text-stone-300 underline-offset-4 hover:underline" href={p.repo} target="_blank" rel="noreferrer">
-                      Code
-                    </a>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-          <a
-            href={profile.moreProjectsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-6 inline-block text-sm text-stone-400 underline-offset-4 hover:text-stone-100 hover:underline"
-          >
-            More projects on GitHub →
-          </a>
+          <ProjectsSection projects={projectHighlights} moreUrl={profile.moreProjectsUrl} />
         </section>
 
         {/* skills */}

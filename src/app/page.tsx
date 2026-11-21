@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { experience, profile, skills } from "@/content/portfolio";
-import { projectHighlights } from "@/content/projectHighlights";
+import { shellProjects } from "@/content/projectHighlights";
 import { ProjectsSection } from "@/components/site/projects/ProjectsSection";
 import { HeroVisual } from "@/components/site/HeroVisual";
 import { RoleTicker } from "@/components/site/RoleTicker";
@@ -136,7 +136,7 @@ export default function Home() {
         {/* work */}
         <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeading id="work" eyebrow="Work" title="Project highlights" />
-          <ProjectsSection projects={projectHighlights} moreUrl={profile.moreProjectsUrl} />
+          <ProjectsSection projects={shellProjects} moreUrl={profile.moreProjectsUrl} />
         </section>
 
         {/* skills */}

@@ -1,0 +1,64 @@
+/* Scoped to the Shell Loader mini demos; nothing here is global. */
+
+.svg * {
+  transform-box: fill-box;
+}
+
+/* Every step-driven element eases between states using opacity and transform only. */
+.t {
+  transition:
+    opacity 260ms ease,
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.originLeft {
+  transform-origin: left center;
+}
+
+.originCenter {
+  transform-origin: center;
+}
+
+.originBottom {
+  transform-origin: center bottom;
+}
+
+/* Output waveform "plays" like an equalizer. */
+.eq {
+  transform-origin: center bottom;
+  animation: eq 520ms ease-in-out infinite alternate;
+}
+
+@keyframes eq {
+  from {
+    transform: scaleY(0.35);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.cursor {
+  animation: blink 900ms steps(2) infinite;
+}
+
+@keyframes blink {
+  to {
+    opacity: 0;
+  }
+}
+
+.paused .eq,
+.paused .cursor {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t {
+    transition: none;
+  }
+  .eq,
+  .cursor {
+    animation: none;
+  }
+}

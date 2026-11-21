@@ -1,45 +1,68 @@
 import { projects, type Project } from "./portfolio";
 
-/** Who the project descriptions are written for. */
-export type Reader = "recruiter" | "developer";
+/** Red shell = LIVE (shipped). Grey shell = BLANK (in progress). */
+export type ShellStatus = "live" | "blank";
 
-export interface ProjectHighlight extends Project {
+/** Which looping mini demo the dossier plays for a project. */
+export type DemoKind = "careergap" | "voice" | "cinevault" | "kolly";
+
+export interface ShellProject extends Project {
   id: string;
-  /** The same project explained two ways: plain language, or technical detail. */
-  summary: Record<Reader, string>;
+  /** Short tag printed under the shell. */
+  label: string;
+  status: ShellStatus;
+  /** One-sentence description shown in the dossier. */
+  description: string;
+  stat: { value: string; label: string };
+  demo: DemoKind;
+  /** Hull color: a different shade per shell, red for shipped, blue-grey for in progress. */
+  hull: string;
 }
 
-const SUMMARIES: Record<string, Record<Reader, string>> = {
+type ShellDetails = Omit<ShellProject, keyof Project | "id">;
+
+const DETAILS: Record<string, ShellDetails> = {
   CareerGapAI: {
-    recruiter:
-      "Shows job seekers which skills they are missing for a target job and turns them into a step-by-step learning plan, based on real, current job postings.",
-    developer:
-      "FastAPI service that pulls up to 30 live Google Jobs postings via SerpAPI, measures skill frequency, scores gaps by demand and by how many skills they unlock, and orders them into a prerequisite-aware roadmap. Pydantic models for validation.",
+    label: "AI",
+    status: "blank",
+    description:
+      "Tells you which skills stand between you and a target job. Analyzes up to 30 live Google Jobs postings, scores gaps by demand and by how many skills they unlock, and builds a prerequisite-aware learning roadmap.",
+    stat: { value: "30", label: "live postings analyzed" },
+    demo: "careergap",
+    hull: "#56708f",
   },
   "Voice Cloner": {
-    recruiter:
-      "Reads any text aloud in someone's voice after hearing just a few seconds of them speaking, in 17 languages, with a consent check and an AI label on every output.",
-    developer:
-      "Zero-shot voice cloning on Coqui XTTS-v2 with an audio preprocessing pipeline, cached speaker embeddings, a FastAPI service and a browser recorder. Needs 6–30 seconds of reference audio.",
+    label: "Deep learning",
+    status: "live",
+    description:
+      "Zero-shot voice cloning: 6–30 seconds of someone speaking is enough to read any text aloud in that voice, in 17 languages, with a consent check and an AI label on every output.",
+    stat: { value: "17", label: "languages" },
+    demo: "voice",
+    hull: "#b3261e",
   },
   CineVault: {
-    recruiter:
-      "A movie review and rating site where people search, rate, review and keep watchlists, and admins moderate the content.",
-    developer:
-      "Angular and Node/Express app with MongoDB, real-time search, genre filters, 5-star ratings, JWT authentication and role-based access for catalog management and review moderation.",
+    label: "Full-stack",
+    status: "live",
+    description:
+      "Movie review and rating platform with real-time search, genre filters, 5-star ratings, reviews and watchlists, with JWT auth and role-based admin moderation.",
+    stat: { value: "RBAC", label: "role-based admin moderation" },
+    demo: "cinevault",
+    hull: "#c2452b",
   },
   "Kolly Guess Game": {
-    recruiter: "A real-time multiplayer version of the classic Kollywood paper game that friends can play together in the browser.",
-    developer:
-      "React 19 and Convex app where players hide a film's hero, heroine, movie and song and others guess with nine chances. Answers are validated server-side so nobody can cheat.",
+    label: "Game",
+    status: "live",
+    description:
+      "The classic KOLLYWOOD paper game as a real-time multiplayer web app, with nine chances per guess and server-side answer validation.",
+    stat: { value: "Live", label: "real-time multiplayer" },
+    demo: "kolly",
+    hull: "#8f1d35",
   },
 };
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-/** Homepage highlights: the existing projects (tags, stacks, links) plus both readings. */
-export const projectHighlights: ProjectHighlight[] = projects.map((p) => ({
-  ...p,
-  id: slug(p.title),
-  summary: SUMMARIES[p.title] ?? { recruiter: p.blurb, developer: p.blurb },
-}));
+/** The four project shells, in table order. Links and stacks come from the shared portfolio data. */
+export const shellProjects: ShellProject[] = projects
+  .filter((p) => DETAILS[p.title])
+  .map((p) => ({ ...p, id: slug(p.title), ...DETAILS[p.title] }));

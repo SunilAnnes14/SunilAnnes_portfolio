@@ -20,6 +20,12 @@ const riseItem: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
 
+/** Opacity-only fade for the pieces of the hobbies line. */
+const fadeWord: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { duration: 0.4 } },
+};
+
 const stagger = (gap: number, start: number): Variants => ({
   hidden: {},
   show: { transition: { staggerChildren: gap, delayChildren: start } },
@@ -97,7 +103,10 @@ export function AboutSection() {
           ))}
         </motion.div>
 
-        {/* Hobbies: one quiet line of normal text; each hobby fades in after the last. */}
+        {/*
+          Hobbies: one quiet line. The "Side quests:" label reuses the site's small amber label style;
+          it fades in first, then each hobby 80ms after the last. Screen readers get one plain sentence.
+        */}
         <motion.p
           className="mt-8 max-w-[60ch] text-base leading-relaxed text-stone-400"
           variants={{
@@ -108,9 +117,11 @@ export function AboutSection() {
           whileInView="show"
           viewport={VIEWPORT}
         >
-          {hobbies.lead}{" "}
+          <motion.span variants={fadeWord} className="text-[11px] font-bold uppercase tracking-[0.3em] text-amber-300/90">
+            {hobbies.lead}
+          </motion.span>{" "}
           {hobbies.items.map((h, i) => (
-            <motion.span key={h} variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { duration: 0.4 } } }}>
+            <motion.span key={h} variants={fadeWord}>
               {h}
               {i < n - 2 ? ", " : i === n - 2 ? " and " : "."}
             </motion.span>

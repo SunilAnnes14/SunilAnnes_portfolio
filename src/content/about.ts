@@ -24,8 +24,8 @@ export const about: AboutContent = {
   ],
   learning: ["Docker", "System design", "Cloud systems"],
   hobbies: {
-    lead: "Outside the code:",
-    items: ["watching movies", "listening to songs", "photography", "dance"],
+    lead: "Side quests:",
+    items: ["movies", "songs", "photography", "dance"],
   },
   closing: "Most days I'm probably debugging with coffee.",
 };

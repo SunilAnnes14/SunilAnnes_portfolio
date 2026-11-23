@@ -2,6 +2,7 @@ import Link from "next/link";
 import { experience, profile, skills } from "@/content/portfolio";
 import { shellProjects } from "@/content/projectHighlights";
 import { ProjectsSection } from "@/components/site/projects/ProjectsSection";
+import { AboutSection } from "@/components/site/about/AboutSection";
 import { HeroVisual } from "@/components/site/HeroVisual";
 import { RoleTicker } from "@/components/site/RoleTicker";
 import { SiteNav } from "@/components/site/SiteNav";
@@ -88,10 +89,7 @@ export default function Home() {
         </section>
 
         {/* about */}
-        <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-          <SectionHeading id="about" eyebrow="About" title="Hi, I'm glad you stopped by." />
-          <p className="max-w-3xl text-base leading-relaxed text-stone-300">{profile.summary}</p>
-        </section>
+        <AboutSection />
 
         {/* featured: the interview */}
         <section className="border-y border-stone-800/70 bg-[#0b0c0e]">

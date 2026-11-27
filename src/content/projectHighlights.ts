@@ -26,10 +26,10 @@ type ShellDetails = Omit<ShellProject, keyof Project | "id">;
 const DETAILS: Record<string, ShellDetails> = {
   "Chennai Flood Watch": {
     shellName: "Flood Watch",
-    label: "Full-stack · Team",
+    label: "Full-stack",
     status: "live",
     description:
-      "A live flood-safety site for Chennai, built with team CR7 Flows: rainfall for 8 areas, citizen flood reports verified by admins, street-level flood forecasts from rainfall, flood history and terrain, road closures and safer driving routes on Leaflet maps.",
+      "A live flood-safety site for Chennai: rainfall for 8 areas, citizen flood reports verified by admins, street-level flood forecasts from rainfall, flood history and terrain, road closures and safer driving routes on Leaflet maps.",
     stat: { value: "97", label: "automated tests" },
     demo: "floodwatch",
     hull: "#b3261e",

@@ -50,9 +50,9 @@ export const projects: Project[] = [
   // and everything else is one click away via profile.moreProjectsUrl.
   {
     title: "Chennai Flood Watch",
-    tag: "Full-stack · Team project",
+    tag: "Full-stack",
     blurb:
-      "A flood-safety website for Chennai, built with team CR7 Flows: live rainfall for 8 areas, citizen flood reports that admins verify, street-level flood forecasts from rainfall, flood history and terrain, road closures and safer driving routes, all on Leaflet maps.",
+      "A flood-safety website for Chennai: live rainfall for 8 areas, citizen flood reports that admins verify, street-level flood forecasts from rainfall, flood history and terrain, road closures and safer driving routes, all on Leaflet maps.",
     stack: ["React", "Vite", "Tailwind CSS", "Leaflet", "Python", "FastAPI", "SQLite"],
     href: "https://flows-cr7.vercel.app/",
     repo: "https://github.com/SunilAnnes14/chennai-floodwatch",
@@ -132,7 +132,7 @@ export const experience: Job[] = [
     period: "2024 – present",
     points: [
       "Built Stavlos AI (multi-agent trading in paper mode), Voice Cloner, CareerGapAI, Kolly Guess Game (React 19 + Convex) and a Web3 smart-contract dApp.",
-      "Co-built Chennai Flood Watch with team CR7 Flows: a live flood-safety site with React, Leaflet and FastAPI.",
+      "Built Chennai Flood Watch: a live flood-safety site with React, Leaflet and FastAPI.",
     ],
   },
   {

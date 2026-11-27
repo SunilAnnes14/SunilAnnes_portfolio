@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "re
 import { LayoutGroup, MotionConfig, useInView } from "motion/react";
 import type { ShellProject } from "@/content/projectHighlights";
 import { sfx, unlockAudio } from "@/game/sound";
+import { LOAD_SHELL_EVENT } from "../fx/events";
 import { Chamber } from "./Chamber";
 import { Dossier } from "./Dossier";
 import { Shell } from "./Shell";
@@ -98,6 +99,16 @@ export function ProjectsSection({ projects, moreUrl }: { projects: ShellProject[
     const next = targetIndex < 0 ? (dir === 1 ? 0 : n - 1) : (targetIndex + dir + n) % n;
     pick(projects[next].id);
   };
+
+  // The command terminal can load a shell by id (it also scrolls here).
+  useEffect(() => {
+    const onLoad = (e: Event) => {
+      const id = (e as CustomEvent<string>).detail;
+      if (projects.some((p) => p.id === id)) pick(id);
+    };
+    window.addEventListener(LOAD_SHELL_EVENT, onLoad);
+    return () => window.removeEventListener(LOAD_SHELL_EVENT, onLoad);
+  }, [pick, projects]);
 
   // Auto-load the first shell once, the first time half the section is visible.
   useEffect(() => {
